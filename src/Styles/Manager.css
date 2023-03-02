@@ -1,0 +1,59 @@
+.window-enter-manager {
+    padding: 15px;
+    height: 350px;
+    width: 300px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#enter-manager {
+    text-align: center;
+    font-family: 'Roboto Slab', serif;
+    font-weight: normal;
+    font-size: 26px;
+    text-align: center;
+    letter-spacing: 2px;
+    margin: 15px;
+}
+
+a {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif, sans-serif;
+    font-size: 14px;
+    text-align: center;
+    text-decoration: none;
+    color: darkgray;
+    padding: 10px;
+}
+
+input {
+    display: block;
+    width: 90%;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    margin: auto;
+}
+
+.button {
+    display: inline-block;
+    width: 200px;
+    height: 35px;
+    border-radius: 15px;
+    margin: 0 auto;
+    display: block;
+}
+
+.button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
