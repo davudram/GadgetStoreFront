@@ -16,7 +16,7 @@ function CategoryTables() {
     useEffect(() => {
         axios({
             method: 'GET',
-            url: 'https://localhost:7108/api/Categories/CategoryList',
+            url: 'https://aspazure20230228181346.azurewebsites.net/api/Categories/CategoryList',
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
                 'Accept': 'application/json',
@@ -28,7 +28,7 @@ function CategoryTables() {
 
        axios({
             method: 'GET',
-            url: 'https://localhost:7108/api/Managers/getUserRole',
+            url: 'https://aspazure20230228181346.azurewebsites.net/api/Managers/getUserRole',
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
                 'Accept': 'application/json',
@@ -40,7 +40,7 @@ function CategoryTables() {
 
         axios({
             method: 'GET',
-            url: 'https://localhost:7108/api/Gadgets/GadgetsList',
+            url: 'https://aspazure20230228181346.azurewebsites.net/api/Gadgets/GadgetsList',
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
                 'Accept': 'application/json',
@@ -75,7 +75,7 @@ function CategoryTables() {
 
                                         axios({
                                             method: 'POST',
-                                            url: 'https://localhost:7108/api/Categories/DeleteCategory',
+                                            url: 'https://aspazure20230228181346.azurewebsites.net/api/Categories/DeleteCategory',
                                             data: {
                                                 "id": del
                                             },
@@ -118,7 +118,7 @@ function CategoryTables() {
 
                                         axios({
                                             method: 'POST',
-                                            url: 'https://localhost:7108/api/Gadgets/DeleteGadget',
+                                            url: 'https://aspazure20230228181346.azurewebsites.net/api/Gadgets/DeleteGadget',
                                             data: {
                                                 "id": delId,
                                             },
@@ -163,7 +163,7 @@ function CategoryTables() {
                             const email = document.getElementById('add-email').value;
                             axios({
                                 method: 'POST',
-                                url: 'https://localhost:7108/api/Authenticate/regManager',
+                                url: 'https://aspazure20230228181346.azurewebsites.net/api/Authenticate/regManager',
                                 data: {
                                     "userName": login,
                                     "password": password,
@@ -189,7 +189,7 @@ function CategoryTables() {
                                 const userName = document.getElementById('del-login').value;
                                 axios({
                                     method: 'POST',
-                                    url: 'https://localhost:7108/api/Managers/delManager',
+                                    url: 'https://aspazure20230228181346.azurewebsites.net/api/Managers/delManager',
                                     data: {
                                         "userName": userName,
                                         "password": "string",
@@ -218,7 +218,7 @@ function CategoryTables() {
                             const addCategory = document.getElementById('add-namegadget').value;
                             axios({
                                 method: 'POST',
-                                url: 'https://localhost:7108/api/Categories/CreateCategory',
+                                url: 'https://aspazure20230228181346.azurewebsites.net/api/Categories/CreateCategory',
                                 data: {
                                     "nameGadgets": addCategory
                                 },
@@ -245,7 +245,7 @@ function CategoryTables() {
 
                             axios({
                                 method: 'POST',
-                                url: 'https://localhost:7108/api/Gadgets/CreateGadget',
+                                url: 'https://aspazure20230228181346.azurewebsites.net/api/Gadgets/CreateGadget',
                                 data: {
                                     "idCategory": categoryId,
                                     "name": gadgetsName,
@@ -283,7 +283,7 @@ function CategoryTables() {
 
                                 axios({
                                     method: 'POST',
-                                    url: 'https://localhost:7108/api/Gadgets/EditGadget',
+                                    url: 'https://aspazure20230228181346.azurewebsites.net/api/Gadgets/EditGadget',
                                     data: {
                                         "id": editId,
                                         "idCategory": editIdCategory,

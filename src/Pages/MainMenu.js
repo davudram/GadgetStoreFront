@@ -9,7 +9,7 @@ function MainMenu() {
     }
 
     function findGadgets(minPrice, maxPrice) {
-        const url = 'https://localhost:7108/api/Gadgets/FilterPriceGadgets';
+        const url = 'https://aspazure20230228181346.azurewebsites.net/api/Gadgets/FilterPriceGadgets';
         const params = {
             minPrice: minPrice,
             maxPrice: maxPrice
@@ -35,7 +35,7 @@ function MainMenu() {
     useEffect(() => {
         const getGadgetCount = async () => {
             try {
-                const response = await axios.get('https://localhost:7108/api/Gadgets/GadgetsList', {
+                const response = await axios.get('https://aspazure20230228181346.azurewebsites.net/api/Gadgets/GadgetsList', {
                     headers: {
                         'Authorization': 'Bearer ' + getToken(),
                         'Accept': 'application/json',
@@ -50,7 +50,7 @@ function MainMenu() {
 
         const getGadgets = async () => {
             try {
-                const response = await axios.get(`/api/GadgetsList?idCategory=${selectedCategory}`, {
+                const response = await axios.get(`https://aspazure20230228181346.azurewebsites.net/api/GadgetsList?idCategory=${selectedCategory}`, {
                     headers: {
                         'Authorization': 'Bearer ' + getToken(),
                         'Accept': 'application/json',
@@ -63,7 +63,7 @@ function MainMenu() {
             }
         }
 
-        fetch(`/api/GadgetsList?search=${search}`)
+        fetch(`https://aspazure20230228181346.azurewebsites.net/api/GadgetsList?search=${search}`)
             .then((res) => res.json())
             .then((data) => setGadgets(data));
 
@@ -76,7 +76,7 @@ function MainMenu() {
     };
 
     const handleSearchClick = () => {
-        fetch(`/api/GadgetsList?search=${search}`)
+        fetch(`https://aspazure20230228181346.azurewebsites.net/api/GadgetsList?search=${search}`)
             .then((res) => res.json())
             .then((data) => setGadgets(data));
     };

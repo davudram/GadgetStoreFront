@@ -20,7 +20,7 @@ function Registration() {
             const email = document.getElementById('email-reg').value;
             axios({
               method: 'post',
-              url: 'https://localhost:7108/api/Authenticate/regUser',
+              url: 'https://aspazure20230228181346.azurewebsites.net/api/Authenticate/regUser',
               data: {
                 "userName": userName,
                 "password": password,
