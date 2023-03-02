@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/a0a7cf48-ef50-4915-a1ce-8d608e7d862d/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/GadgetStoreFront",
+    "appService.deploySubpath": "."
+}
