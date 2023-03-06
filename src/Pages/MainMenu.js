@@ -1,6 +1,11 @@
 import '../Styles/Menu.css';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from 'react-responsive-carousel';
+import Footer from './Footer';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FiPlus } from "react-icons/fi";
 
 function MainMenu() {
 
@@ -24,14 +29,14 @@ function MainMenu() {
             });
     }
 
+    const [activeIndex, setActiveIndex] = useState(null);
+    const contentRefs = useRef([]);
+    const navigate = useNavigate();
     const [showCart, setShowCart] = useState(false);
     const [cartItems, setCartItems] = useState([]);
     const [gadgetCount, setGadgetCount] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState(null);
     const [search, setSearch] = useState("");
     const [gadgets, setGadgets] = useState([]);
-    const cities = [{ name: 'Днепр', phoneNumber: '+38(098) 555-5555' }, { name: 'Харьков', phoneNumber: '+38(097) 555-5555' }, { name: 'Киев', phoneNumber: '+38(096) 555-5555' }, { name: 'Запорожье', phoneNumber: '+38(098) 535-5255' }, { name: 'Херсон', phoneNumber: '+38(098) 515-5545' },];
-
     useEffect(() => {
         const getGadgetCount = async () => {
             try {
@@ -48,28 +53,13 @@ function MainMenu() {
             }
         };
 
-        const getGadgets = async () => {
-            try {
-                const response = await axios.get(`https://aspazure20230228181346.azurewebsites.net/api/GadgetsList?idCategory=${selectedCategory}`, {
-                    headers: {
-                        'Authorization': 'Bearer ' + getToken(),
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                });
-                setGadgets(response.data);
-            } catch (error) {
-                console.error(error);
-            }
-        }
 
         fetch(`https://aspazure20230228181346.azurewebsites.net/api/GadgetsList?search=${search}`)
             .then((res) => res.json())
             .then((data) => setGadgets(data));
 
         getGadgetCount();
-        getGadgets();
-    }, [selectedCategory], [search]);
+    }, [search]);
 
     const handleSearchChange = (event) => {
         setSearch(event.target.value);
@@ -86,6 +76,17 @@ function MainMenu() {
         const maxValue = document.getElementById('maxvalue').value;
         findGadgets(minValue, maxValue);
     }
+
+    const toggleAccordion = (index) => {
+        setActiveIndex(activeIndex === index ? null : index);
+    };
+
+    const contentStyles = (index) => ({
+        maxHeight: activeIndex === index ? `${contentRefs.current[index].scrollHeight}px` : 0,
+        overflow: "hidden",
+        transition: "max-height 0.6s ease",
+    });
+
     const handleAddToCart = (gadget) => {
         fetch('/api/cart/add', {
             method: 'POST',
@@ -118,9 +119,9 @@ function MainMenu() {
             <header className="App-header">
                 <nav className="top-menu">
                     <ul className="menu-main">
-                        <li id="phones" onClick={() => setSelectedCategory('phones')}><a href="">Phones</a></li>
-                        <li onClick={() => setSelectedCategory('laptops')}><a href="">Laptop</a></li>
-                        <li onClick={() => setSelectedCategory('smartwatch')}><a href="">Smart Watch</a></li>
+                        <li id="phones" onClick={() => navigate('/phones')}><a href="">Phones</a></li>
+                        <li onClick={() => navigate('/laptops')}><a href="">Laptop</a></li>
+                        <li onClick={() => navigate('/smartwatches')}><a href="">Smart Watch</a></li>
                         <li><button className="btn" onClick={handleOpenCart}><i className="fa fa-home"></i>&#128722;</button></li>
                     </ul>
                 </nav>
@@ -128,7 +129,7 @@ function MainMenu() {
                     <div key={gadget.id}>{gadget.name}</div>
                 ))}
                 <div className="group">
-                    <h1>Gadgets Market</h1>
+                    <h1>Gadgets Market &#128241;</h1><br />
                     <input placeholder="&#128269;Search" type="text" className="search" value={search} onChange={handleSearchChange}></input><br></br>
                     <button id="find-search" onClick={handleSearchClick}>Find</button>
                     <ul>
@@ -136,13 +137,6 @@ function MainMenu() {
                             <li key={gadget.id}>{gadget.name}</li>
                         ))}
                     </ul>
-                </div>
-
-                <div className='filter'>
-                    <h1>Filter</h1>
-                    <input id="minvalue" type="number" placeholder='Enter min price'></input>
-                    <input id="maxvalue" type="number" placeholder='Enter max price'></input>
-                    <button id="findGadget" onClick={handleClick}>Find</button>
                 </div>
 
                 {showCart && (
@@ -166,28 +160,103 @@ function MainMenu() {
                         <button className="close-cart-btn" onClick={handleCloseCart}>Close</button>
                     </div>
                 )}
-                <h1>Gadgets</h1>
-                <div className="cards-gadget">
-                    {gadgetCount.map(gadget => (
-                        <div className='card' key={gadget.id}>
-                            <img src={`${gadget.image}`} className="regular-img" style={{ height: 130, width: 100 }}></img>
-                            <h2>{gadget.name}</h2>
-                            <p>{gadget.price} USD</p>
-                            <button className="buy-button" onClick={() => handleAddToCart(gadget)}>Add to Cart</button>
-                        </div>
-                    ))}
-                </div>
-                <footer style={{ backgroundColor: '#f5f5f5', padding: '20px 0', marginTop: 'auto' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', maxWidth: '1200px', margin: '0 auto' }}>
-                        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                            {cities.map(city => (
-                                <p key={city.name} style={{ marginRight: '20px', marginBottom: '10px' }}>
-                                    {city.name}: <a href={`tel:${city.phoneNumber}`} style={{ color: '#333', textDecoration: 'none' }}>{city.phoneNumber}</a>
-                                </p>
-                            ))}
-                        </div>
+
+                <Carousel>
+                    <div>
+                        <img src="https://yellow.ua/media/adminforms/homepage_slider_banners/a/r/xartboard_1_16.png.pagespeed.ic._61jKyeonI.webp" />
                     </div>
-                </footer>
+                    <div>
+                        <img src="https://yellow.ua/media/adminforms/homepage_slider_banners/a/r/xartboard_1_18.png.pagespeed.ic.VQc-aCKYv7.webp" />
+                    </div>
+                    <div>
+                        <img src="https://yellow.ua/media/adminforms/homepage_slider_banners/1/3/x1300_2.png.pagespeed.ic.B4DrKwgHtO.webp" />
+                    </div>
+                    <div>
+                        <img src="https://yellow.ua/media/adminforms/homepage_slider_banners/a/r/xartboard_1_9.png.pagespeed.ic.oErOeXHZbk.webp" />
+                    </div>
+                </Carousel>
+
+                <div className='advertising'>
+                    <img src='https://yellow.ua/media/specialaction/image/_/1/x_1_3.jpg.pagespeed.ic.i3WZBAsTKB.webp' style={{ width: '50%', float: 'left', margin: 10 }}></img>
+                    <img src='https://yellow.ua/media/catalog/product/cache/8/small_image/211x211/9df78eab33525d08d6e5fb8d27136e95/9/3/x9374067_r_z001a.jpg.pagespeed.ic.N2FTl4h3uR.webp' style={{ float: 'left', margin: 10 }}></img>
+                    <p>Dyson Supersonic Hair Dryer (Iron/Fuchsia) HD07</p>
+                    <button id='soon'>On sale soon</button>
+                </div>
+
+
+                <div className='content'>
+                    <div className='filter'>
+                        <h1>Filter</h1>
+                        <input id="minvalue" type="number" placeholder='Enter min price'></input>
+                        <input id="maxvalue" type="number" placeholder='Enter max price'></input>
+                        <button id="findGadget" onClick={handleClick}>Find</button>
+                    </div>
+
+                    <h1>Gadgets</h1>
+                    <div className="cards-gadget">
+                        {gadgetCount.map(gadget => (
+                            <div className='card' key={gadget.id}>
+                                <img src={`${gadget.image}`} className="regular-img" style={{ height: 130, width: 100 }}></img>
+                                <h2>{gadget.name}</h2>
+                                <p>{gadget.price} USD</p>
+                                <button className="buy-button" onClick={() => handleAddToCart(gadget)}>Add to Cart</button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className='faq-info'>
+                    <h1>FAQ</h1>
+                    <div className="ask">
+                        <button className={`question-section ${activeIndex === 0 ? "active" : ""}`} onClick={() => toggleAccordion(0)}>
+                            <div className="question-align">
+                                <h4 className="question-style">What is your return policy for electronic items?</h4>
+                                <FiPlus className={`question-icon ${activeIndex === 0 ? "rotate" : ""}`} />
+                            </div>
+                            <div ref={(ref) => contentRefs.current[0] = ref} style={contentStyles(0)} className="answer answer-divider">
+                                <p>We accept returns on electronic items within 30 days of purchase as long as the item is in its original condition and packaging. If the item is defective, we will offer a full refund or exchange within the first 90 days of purchase. Please note that some items, such as software and certain accessories, may not be eligible for return or exchange. For more information, please see our full return policy on our website or contact our customer service team.</p>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div className="ask">
+                        <button className={`question-section ${activeIndex === 1 ? "active" : ""}`} onClick={() => toggleAccordion(1)}>
+                            <div className="question-align">
+                                <h4 className="question-style">Do you offer warranty on your products?</h4>
+                                <FiPlus className={`question-icon ${activeIndex === 1 ? "rotate" : ""}`} />
+                            </div>
+                            <div ref={(ref) => contentRefs.current[1] = ref} style={contentStyles(1)} className="answer answer-divider">
+                                <p>Yes, we offer a warranty on most of our products. The length and terms of the warranty may vary depending on the product and manufacturer. Please check the product description or packaging for specific warranty information. If you have any questions or concerns about a warranty, please contact our customer service team for assistance.</p>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div className="ask">
+                        <button className={`question-section ${activeIndex === 2 ? "active" : ""}`} onClick={() => toggleAccordion(2)}>
+                            <div className="question-align">
+                                <h4 className="question-style">What forms of payment do you accept?</h4>
+                                <FiPlus className={`question-icon ${activeIndex === 2 ? "rotate" : ""}`} />
+                            </div>
+                            <div ref={(ref) => contentRefs.current[2] = ref} style={contentStyles(2)} className="answer answer-divider">
+                                <p>We accept all major credit cards, including Visa, Mastercard, American Express, and Discover. We also accept payment through PayPal and Apple Pay. At this time, we do not accept payment through cash or check.</p>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div className="ask">
+                        <button className={`question-section ${activeIndex === 3 ? "active" : ""}`} onClick={() => toggleAccordion(3)}>
+                            <div className="question-align">
+                                <h4 className="question-style">Do you offer free shipping?</h4>
+                                <FiPlus className={`question-icon ${activeIndex === 3 ? "rotate" : ""}`} />
+                            </div>
+                            <div ref={(ref) => contentRefs.current[3] = ref} style={contentStyles(3)} className="answer answer-divider">
+                                <p>We offer free standard shipping on orders over $50 within the Ukraine. Some products may not be eligible for free shipping and shipping fees may apply to orders outside of the Ukraine. Please check the product description or contact our customer service team for more information.</p>
+                            </div>
+                        </button>
+                    </div>
+
+                </div>
+                <Footer />
             </header>
         </div>
     );

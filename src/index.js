@@ -8,6 +8,9 @@ import Registration from './Pages/Registration';
 import MainMenu from './Pages/MainMenu';
 import CategoryTables from './Pages/CategoryTables';
 import SignManager from './Pages/SignManager';
+import PhonesCategory from './Pages/PhonesCategory';
+import LaptopCategory from './Pages/LaptopCategory';
+import SmartWatchCategory from './Pages/SmartWatchCategory';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -21,6 +24,9 @@ root.render(
                 <Route path='/table' element={<CategoryTables />}></Route>
                 <Route path='/admin' element={<SignAdmin />}></Route>
                 <Route path='/manager' element={<SignManager />}></Route>
+                <Route path='/phones' element={<PhonesCategory />}></Route>
+                <Route path='/laptops' element={<LaptopCategory />}></Route>
+                <Route path='/smartwatches' element={<SmartWatchCategory />}></Route>
             </Routes>
         </BrowserRouter>
   </React.StrictMode>
