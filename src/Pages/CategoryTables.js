@@ -1,5 +1,9 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { ToastContainer, toast } from 'react-toastify';
+import { Card } from 'react-bootstrap';
+import 'react-toastify/dist/ReactToastify.css';
 import '../Styles/CategoryTable.css';
 
 function CategoryTables() {
@@ -11,7 +15,54 @@ function CategoryTables() {
     const [category, setCategory] = useState([]);
     const [gadget, setGadget] = useState([]);
     const [userRole, setUserRole] = useState('');
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [uploadStatus, setUploadStatus] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
 
+    const onDrop = (acceptedFiles) => {
+        setSelectedFile(acceptedFiles[0]);
+        setImageUrl(URL.createObjectURL(acceptedFiles[0]));
+    };
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+    const uploadFile = async () => {
+        if (!selectedFile) {
+          toast.error('Please select a file to upload');
+          return;
+        }
+      
+        setIsLoading(true);
+        setUploadProgress(0);
+        setUploadStatus('');
+      
+        const formData = new FormData();
+        formData.append('files', selectedFile);
+      
+        try {
+          const response = await axios.post('https://aspazure20230228181346.azurewebsites.net/api/Gadgets/Upload', formData, {
+            headers: {
+                'Authorization': 'Bearer ' + getToken(),
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+      
+          setIsLoading(false);
+          setUploadProgress(100);
+          setUploadStatus('Success');
+          setImageUrl(response.data); 
+      
+          toast.success('File uploaded successfully');
+        } catch (error) {
+          setIsLoading(false);
+          setUploadProgress(0);
+          setUploadStatus('Error');
+      
+          toast.error('Error uploading file');
+        }
+      };
 
     useEffect(() => {
         axios({
@@ -26,7 +77,7 @@ function CategoryTables() {
             setCategory(response.data);
         })
 
-       axios({
+        axios({
             method: 'GET',
             url: 'https://aspazure20230228181346.azurewebsites.net/api/Managers/getUserRole',
             headers: {
@@ -150,35 +201,36 @@ function CategoryTables() {
                     </table>
                 </div>
 
+                <h1>Edit Data</h1>
                 <div id="for-crud">
-                {userRole === 'Admin' && (
-                    <div className="container">
-                        <h1>Create Manager</h1>
-                        <input id="add-login" type="text" className="input" placeholder="Enter login" />
-                        <input id="add-password" type="text" className="input" placeholder="Enter password" />
-                        <input id="add-email" type="text" className="input" placeholder="Enter email" />
-                        <br /><button id="add-manager" onClick={() => {
-                            const login = document.getElementById('add-login').value;
-                            const password = document.getElementById('add-password').value;
-                            const email = document.getElementById('add-email').value;
-                            axios({
-                                method: 'POST',
-                                url: 'https://aspazure20230228181346.azurewebsites.net/api/Authenticate/regManager',
-                                data: {
-                                    "userName": login,
-                                    "password": password,
-                                    "email": email
-                                },
-                                dataType: 'dataType',
-                                headers: {
-                                    'Authorization': 'Bearer ' + getToken(),
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json'
-                                },
-                            }).then(data => alert("Succsessfull"))
-                        }}>Create</button>
-                    </div>
-                )}
+                    {userRole === 'Admin' && (
+                        <div className="container">
+                            <h1>Create Manager</h1>
+                            <input id="add-login" type="text" className="input" placeholder="Enter login" />
+                            <input id="add-password" type="text" className="input" placeholder="Enter password" />
+                            <input id="add-email" type="text" className="input" placeholder="Enter email" />
+                            <br /><button id="add-manager" onClick={() => {
+                                const login = document.getElementById('add-login').value;
+                                const password = document.getElementById('add-password').value;
+                                const email = document.getElementById('add-email').value;
+                                axios({
+                                    method: 'POST',
+                                    url: 'https://aspazure20230228181346.azurewebsites.net/api/Authenticate/regManager',
+                                    data: {
+                                        "userName": login,
+                                        "password": password,
+                                        "email": email
+                                    },
+                                    dataType: 'dataType',
+                                    headers: {
+                                        'Authorization': 'Bearer ' + getToken(),
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                }).then(data => alert("Succsessfull"))
+                            }}>Create</button>
+                        </div>
+                    )}
 
                     {userRole === 'Admin' && (
                         <div className="container">
@@ -307,6 +359,61 @@ function CategoryTables() {
                         </div>
                     </div>
                 </div>
+
+                <Card className="my-4" style={{width: 800, height: 670, marginTop: 100}}>
+                <h1>Upload Image</h1>
+                    <Card.Body>
+                        <div {...getRootProps()} className="dropzone">
+                            <input {...getInputProps()} />
+                            {isDragActive ? (
+                                <p>Drop the files here ...</p>
+                            ) : (
+                                <p>Click for upload files</p>
+                            )}
+                        </div>
+
+                        <div className="file-upload-info">
+                            {selectedFile && (
+                                <div className="selected-file">
+                                    <span className="file-name">{selectedFile.name}</span>
+                                    <button className="btn btn-danger btn-sm" onClick={() => {
+                                        setSelectedFile(null);
+                                        setImageUrl('');
+                                    }}>Delete</button>
+                                </div>
+                            )}
+
+                            {imageUrl && (
+                                <div className="uploaded-image">
+                                    <img src={imageUrl} alt="Uploaded" />
+                                </div>
+                            )}
+
+                            {isLoading && (
+                                <div className="upload-progress">
+                                    <div className="progress">
+                                        <div
+                                            className="progress-bar progress-bar-striped progress-bar-animated"
+                                            role="progressbar"
+                                            aria-valuenow={uploadProgress}
+                                            aria-valuemin="0"
+                                            aria-valuemax="100"
+                                            style={{ width: `${uploadProgress}%` }}
+                                        />
+                                    </div>
+                                    <div className="upload-status">{uploadStatus}</div>
+                                </div>
+                            )}
+
+                            <button className="btn btn-primary btn-block" onClick={uploadFile}>
+                                Upload
+                            </button>
+                        </div>
+
+                        <ToastContainer />
+                    </Card.Body>
+                </Card>
+
             </header>
         </div>
     );

@@ -6,6 +6,7 @@ import Footer from './Footer';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiPlus } from "react-icons/fi";
+import { toast } from 'react-toastify';
 
 function MainMenu() {
 
@@ -34,6 +35,7 @@ function MainMenu() {
     const navigate = useNavigate();
     const [showCart, setShowCart] = useState(false);
     const [cartItems, setCartItems] = useState([]);
+    const [userName, setUserName] = useState(null);
     const [gadgetCount, setGadgetCount] = useState([]);
     const [search, setSearch] = useState("");
     const [gadgets, setGadgets] = useState([]);
@@ -53,13 +55,34 @@ function MainMenu() {
             }
         };
 
+        fetch('https://aspazure20230228181346.azurewebsites.net/api/Managers/UserId', {
+            headers: {
+                'Authorization': 'Bearer ' + getToken(),
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to get user id');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setUserName(data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+
 
         fetch(`https://aspazure20230228181346.azurewebsites.net/api/GadgetsList?search=${search}`)
             .then((res) => res.json())
             .then((data) => setGadgets(data));
 
         getGadgetCount();
-    }, [search]);
+    }, [], [search]);
 
     const handleSearchChange = (event) => {
         setSearch(event.target.value);
@@ -88,16 +111,29 @@ function MainMenu() {
     });
 
     const handleAddToCart = (gadget) => {
-        fetch('/api/cart/add', {
+        const cartItem = {
+            productId: gadget.id,
+            productName: gadget.name,
+            productImage: gadget.image,
+            price: gadget.price,
+            quantity: 1,
+            userId: userName,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+
+        fetch('https://aspazure20230228181346.azurewebsites.net/api/Cart/AddCart', {
             method: 'POST',
             headers: {
+                'Authorization': 'Bearer ' + getToken(),
+                'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(gadget)
+            body: JSON.stringify(cartItem)
         })
             .then(response => {
                 if (response.ok) {
-                    setCartItems(prevItems => [...prevItems, gadget]);
+                    setCartItems(prevItems => [...prevItems, cartItem]);
                 } else {
                     console.error(response.statusText);
                 }
@@ -145,10 +181,10 @@ function MainMenu() {
                         {cartItems.length > 0 ? (
                             <div className="cart-items">
                                 {cartItems.map(item => (
-                                    <div className="cart-item" key={item.id}>
-                                        <img src={`${item.image}`} className="cart-item-img"></img>
+                                    <div className='cart-item' key={item.id}>
+                                        <img src={`${item.productImage}`} className="cart-item-img"></img>
                                         <div className="cart-item-details">
-                                            <h3>{item.name}</h3>
+                                            <h3>{item.productName}</h3>
                                             <p>{item.price} USD</p>
                                         </div>
                                     </div>
