@@ -14,6 +14,7 @@ function CategoryTables() {
 
     const [category, setCategory] = useState([]);
     const [gadget, setGadget] = useState([]);
+    const [cartsItems, setCartsItems] = useState([]);
     const [userRole, setUserRole] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -30,39 +31,39 @@ function CategoryTables() {
 
     const uploadFile = async () => {
         if (!selectedFile) {
-          toast.error('Please select a file to upload');
-          return;
+            toast.error('Please select a file to upload');
+            return;
         }
-      
+
         setIsLoading(true);
         setUploadProgress(0);
         setUploadStatus('');
-      
+
         const formData = new FormData();
         formData.append('files', selectedFile);
-      
+
         try {
-          const response = await axios.post('https://aspazure20230228181346.azurewebsites.net/api/Gadgets/Upload', formData, {
-            headers: {
-                'Authorization': 'Bearer ' + getToken(),
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-      
-          setIsLoading(false);
-          setUploadProgress(100);
-          setUploadStatus('Success');
-          setImageUrl(response.data); 
-      
-          toast.success('File uploaded successfully');
+            const response = await axios.post('https://aspazure20230228181346.azurewebsites.net/api/Gadgets/Upload', formData, {
+                headers: {
+                    'Authorization': 'Bearer ' + getToken(),
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            setIsLoading(false);
+            setUploadProgress(100);
+            setUploadStatus('Success');
+            setImageUrl(response.data);
+
+            toast.success('File uploaded successfully');
         } catch (error) {
-          setIsLoading(false);
-          setUploadProgress(0);
-          setUploadStatus('Error');
-      
-          toast.error('Error uploading file');
+            setIsLoading(false);
+            setUploadProgress(0);
+            setUploadStatus('Error');
+
+            toast.error('Error uploading file');
         }
-      };
+    };
 
     useEffect(() => {
         axios({
@@ -75,6 +76,18 @@ function CategoryTables() {
             },
         }).then(response => {
             setCategory(response.data);
+        })
+
+        axios({
+            method: 'GET',
+            url: 'https://aspazure20230228181346.azurewebsites.net/api/Cart/GetCart',
+            headers: {
+                'Authorization': 'Bearer ' + getToken(),
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        }).then(response => {
+            setCartsItems(response.data);
         })
 
         axios({
@@ -195,6 +208,61 @@ function CategoryTables() {
                                         }}>Edit</button>
 
                                     </td>
+                                </tr>
+                            </tbody>
+                        ))}
+                    </table>
+                </div>
+
+                <div className="table-carts">
+                    <h1>Orders</h1>
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Image</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">User</th>
+                                <th scope="col">Order date</th>
+                                <th scope="col">Edit</th>
+                            </tr>
+                        </thead>
+                        {cartsItems.map(carts => (
+                            <tbody className='tbody' key={carts.id}>
+                                <tr>
+                                    <td><img src={`${carts.productImage}`} style={{ width: 80, height: 100 }} /></td>
+                                    <td>{carts.id}</td>
+                                    <td>{carts.productName}</td>
+                                    <td>{carts.price} USD</td>
+                                    <td>{carts.quantity}</td>
+                                    <td>{carts.userId}</td>
+                                    <td>{carts.createdAt}</td>
+                                    <td><button className='del-btn-order' onClick={() => {
+                                        const del = carts.id;
+
+                                        axios({
+                                            method: 'POST',
+                                            url: 'https://aspazure20230228181346.azurewebsites.net/api/Cart/DeleteCart',
+                                            data: {
+                                                "id": del,
+                                                "productId": 0,
+                                                "productName": "string",
+                                                "productImage": "string",
+                                                "price": 0,
+                                                "quantity": 0,
+                                                "userId": "string",
+                                                "createdAt": "2023-03-11T19:52:46.754Z",
+                                                "updatedAt": "2023-03-11T19:52:46.754Z"
+                                            },
+                                            headers: {
+                                                'Authorization': 'Bearer ' + getToken(),
+                                                'Accept': 'application/json',
+                                                'Content-Type': 'application/json'
+                                            }
+                                        }).then(data => alert("Successful"))
+                                    }}>Delete</button></td>
                                 </tr>
                             </tbody>
                         ))}
@@ -360,8 +428,8 @@ function CategoryTables() {
                     </div>
                 </div>
 
-                <Card className="my-4" style={{width: 800, height: 670, marginTop: 100}}>
-                <h1>Upload Image</h1>
+                <Card className="my-4" style={{ width: 800, height: 670, marginTop: 100 }}>
+                    <h1>Upload Image</h1>
                     <Card.Body>
                         <div {...getRootProps()} className="dropzone">
                             <input {...getInputProps()} />
