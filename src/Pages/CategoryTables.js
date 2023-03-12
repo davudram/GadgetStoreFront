@@ -244,18 +244,7 @@ function CategoryTables() {
 
                                         axios({
                                             method: 'POST',
-                                            url: 'https://aspazure20230228181346.azurewebsites.net/api/Cart/DeleteCart',
-                                            data: {
-                                                "id": del,
-                                                "productId": 0,
-                                                "productName": "string",
-                                                "productImage": "string",
-                                                "price": 0,
-                                                "quantity": 0,
-                                                "userId": "string",
-                                                "createdAt": "2023-03-11T19:52:46.754Z",
-                                                "updatedAt": "2023-03-11T19:52:46.754Z"
-                                            },
+                                            url: `https://aspazure20230228181346.azurewebsites.net/api/Cart/DeleteCart?Id=${del}`,
                                             headers: {
                                                 'Authorization': 'Bearer ' + getToken(),
                                                 'Accept': 'application/json',

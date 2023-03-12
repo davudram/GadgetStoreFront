@@ -14,22 +14,6 @@ function MainMenu() {
         return sessionStorage.getItem("token");
     }
 
-    function findGadgets(minPrice, maxPrice) {
-        const url = 'https://aspazure20230228181346.azurewebsites.net/api/Gadgets/FilterPriceGadgets';
-        const params = {
-            minPrice: minPrice,
-            maxPrice: maxPrice
-        };
-
-        axios.get(url, { params })
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
-
     const [activeIndex, setActiveIndex] = useState(null);
     const contentRefs = useRef([]);
     const navigate = useNavigate();
@@ -39,6 +23,8 @@ function MainMenu() {
     const [gadgetCount, setGadgetCount] = useState([]);
     const [search, setSearch] = useState("");
     const [gadgets, setGadgets] = useState([]);
+    const [gadgetList, setGadgetList] = useState(gadgetCount);
+
     useEffect(() => {
         const getGadgetCount = async () => {
             try {
@@ -82,6 +68,35 @@ function MainMenu() {
         setSearch(event.target.value);
     };
 
+    function handleClick() {
+        const minValue = document.getElementById('minvalue').value;
+        const maxValue = document.getElementById('maxvalue').value;
+        findGadgets(minValue, maxValue);
+    }
+
+    function findGadgets(minPrice, maxPrice) {
+        fetch(`https://aspazure20230228181346.azurewebsites.net/api/Gadgets/FilterPriceGadgets?minPrice=${minPrice}&maxPrice=${maxPrice}`, {
+            headers: {
+                'Authorization': 'Bearer ' + getToken(),
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                setGadgetList(data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
+
     const handleSearchClick = () => {
         fetch(`https://aspazure20230228181346.azurewebsites.net/api/Gadgets/SearchGadgetsList?search=${search}`, {
             headers: {
@@ -93,12 +108,6 @@ function MainMenu() {
             .then((res) => res.json())
             .then((data) => setGadgets(data));
     };
-
-    function handleClick() {
-        const minValue = document.getElementById('minvalue').value;
-        const maxValue = document.getElementById('maxvalue').value;
-        findGadgets(minValue, maxValue);
-    }
 
     const toggleAccordion = (index) => {
         setActiveIndex(activeIndex === index ? null : index);
@@ -144,18 +153,14 @@ function MainMenu() {
     }
 
     const handleDelCart = (item) => {
-        const dataItem = {
-            id: item.id
-        }
 
-        fetch('https://aspazure20230228181346.azurewebsites.net/api/Cart/DeleteCart', {
+        fetch(`https://aspazure20230228181346.azurewebsites.net/api/Cart/DeleteCart?Id=${item.id}`, {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(dataItem)
         })
             .then(response => {
                 if (!response.ok) {
@@ -189,21 +194,22 @@ function MainMenu() {
                         <li><button className="btn" onClick={handleOpenCart}><i className="fa fa-home"></i>&#128722;</button></li>
                     </ul>
                 </nav>
-
                 <div className="group">
                     <h1>Gadgets Market &#128241;</h1><br />
                     <input placeholder="&#128269;Search" type="text" className="search" value={search} onChange={handleSearchChange}></input><br></br>
                     <button id="find-search" onClick={handleSearchClick}>Find</button>
-                    <div className='search-gadgets'>
-                        {gadgets.map((gadget) => (
-                            <div className='card' key={gadget.id}>
-                                <img src={`${gadget.image}`} className="regular-img" style={{ height: 130, width: 100 }}></img>
-                                <h2>{gadget.name}</h2>
-                                <p>{gadget.price} USD</p>
-                                <button className="buy-button" onClick={() => handleAddToCart(gadget)}>Add to Cart</button>
-                            </div>
-                        ))}
-                    </div>
+                    {gadgets.length > 0 ? (
+                        <div className='search-gadgets' style={{marginTop: '4%'}}>
+                            {gadgets.map((gadget) => (
+                                <div className='card' key={gadget.id}>
+                                    <img src={`${gadget.image}`} className="regular-img" style={{ height: 130, width: 100 }}></img>
+                                    <h2>{gadget.name}</h2>
+                                    <p>{gadget.price} USD</p>
+                                    <button className="buy-button" onClick={() => handleAddToCart(gadget)}>Add to Cart</button>
+                                </div>
+                            ))}
+                        </div>
+                    ) : null}
                 </div>
 
                 {showCart && (
@@ -263,17 +269,27 @@ function MainMenu() {
                         <input id="maxvalue" type="number" placeholder='Enter max price'></input>
                         <button id="findGadget" onClick={handleClick}>Find</button>
                     </div>
-
                     <h1>Gadgets</h1>
                     <div className="cards-gadget">
-                        {gadgetCount.map(gadget => (
-                            <div className='card' key={gadget.id}>
-                                <img src={`${gadget.image}`} className="regular-img" style={{ height: 130, width: 100 }}></img>
-                                <h2>{gadget.name}</h2>
-                                <p>{gadget.price} USD</p>
-                                <button className="buy-button" onClick={() => handleAddToCart(gadget)}>Add to Cart</button>
-                            </div>
-                        ))}
+                        {gadgetList.length > 0 ? (
+                            gadgetList.map(gadget => (
+                                <div className='card' key={gadget.id}>
+                                    <img src={`${gadget.image}`} className="regular-img" style={{ height: 130, width: 100 }}></img>
+                                    <h2>{gadget.name}</h2>
+                                    <p>{gadget.price} USD</p>
+                                    <button className="buy-button" onClick={() => handleAddToCart(gadget)}>Add to Cart</button>
+                                </div>
+                            ))
+                        ) : (
+                            gadgetCount.map(gadget => (
+                                <div className='card' key={gadget.id}>
+                                    <img src={`${gadget.image}`} className="regular-img" style={{ height: 130, width: 100 }}></img>
+                                    <h2>{gadget.name}</h2>
+                                    <p>{gadget.price} USD</p>
+                                    <button className="buy-button" onClick={() => handleAddToCart(gadget)}>Add to Cart</button>
+                                </div>
+                            ))
+                        )}
                     </div>
                 </div>
 
@@ -323,6 +339,30 @@ function MainMenu() {
                             </div>
                             <div ref={(ref) => contentRefs.current[3] = ref} style={contentStyles(3)} className="answer answer-divider">
                                 <p>We offer free standard shipping on orders over $50 within the Ukraine. Some products may not be eligible for free shipping and shipping fees may apply to orders outside of the Ukraine. Please check the product description or contact our customer service team for more information.</p>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div className="ask">
+                        <button className={`question-section ${activeIndex === 3 ? "active" : ""}`} onClick={() => toggleAccordion(3)}>
+                            <div className="question-align">
+                                <h4 className="question-style">What is the latest smartphone model available in your store?</h4>
+                                <FiPlus className={`question-icon ${activeIndex === 3 ? "rotate" : ""}`} />
+                            </div>
+                            <div ref={(ref) => contentRefs.current[3] = ref} style={contentStyles(3)} className="answer answer-divider">
+                                <p>Our latest smartphone model available in-store is the Iphone 14 Pro Max.</p>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div className="ask">
+                        <button className={`question-section ${activeIndex === 3 ? "active" : ""}`} onClick={() => toggleAccordion(3)}>
+                            <div className="question-align">
+                                <h4 className="question-style">Can I try out a product before purchasing it?</h4>
+                                <FiPlus className={`question-icon ${activeIndex === 3 ? "rotate" : ""}`} />
+                            </div>
+                            <div ref={(ref) => contentRefs.current[3] = ref} style={contentStyles(3)} className="answer answer-divider">
+                                <p>Yes, we have several demo products available in-store for customers to try before making a purchase.</p>
                             </div>
                         </button>
                     </div>

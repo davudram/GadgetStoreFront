@@ -363,7 +363,7 @@ h2 {
 }
 
 .faq-info {
-  margin-top: 30%;
+  margin-top: 35%;
   margin-bottom: 12%;
 }
 
@@ -456,8 +456,3 @@ h2 {
   display: flex;
   flex-wrap: wrap;
 }
-
-.group{
-  margin-top: 3%;
-}
-
