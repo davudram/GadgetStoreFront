@@ -233,7 +233,7 @@ h2 {
   border-radius: 10px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   margin-left: 10px;
-  margin-top: 3%;
+  margin-top: 5.5%;
   float: left;
 }
 
@@ -340,7 +340,7 @@ h2 {
 
 .advertising {
   width: 90%;
-  height: 250px;
+  height: 270px;
   border-radius: 20px;
   padding: 1px;
   background: #ffffff;
@@ -363,8 +363,8 @@ h2 {
 }
 
 .faq-info {
-  margin-top: 35%;
-  margin-bottom: 12%;
+  margin-top: 100em;
+  margin-bottom: 8%;
 }
 
 .ask {
