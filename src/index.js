@@ -11,24 +11,26 @@ import SignManager from './Pages/SignManager';
 import PhonesCategory from './Pages/PhonesCategory';
 import LaptopCategory from './Pages/LaptopCategory';
 import SmartWatchCategory from './Pages/SmartWatchCategory';
+import CardUpload from './Pages/CardUpload';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-            <Routes>
-                <Route path='/' element={<App />}></Route>
-                <Route path='/menu' element={<MainMenu />}></Route>
-                <Route path='/registration' element={<Registration />}></Route>
-                <Route path='/table' element={<CategoryTables />}></Route>
-                <Route path='/admin' element={<SignAdmin />}></Route>
-                <Route path='/manager' element={<SignManager />}></Route>
-                <Route path='/phones' element={<PhonesCategory />}></Route>
-                <Route path='/laptops' element={<LaptopCategory />}></Route>
-                <Route path='/smartwatches' element={<SmartWatchCategory />}></Route>
-            </Routes>
-        </BrowserRouter>
+      <Routes>
+        <Route path='/' element={<App />}></Route>
+        <Route path='/menu' element={<MainMenu />}></Route>
+        <Route path='/registration' element={<Registration />}></Route>
+        <Route path='/table' element={<CategoryTables />}></Route>
+        <Route path='/admin' element={<SignAdmin />}></Route>
+        <Route path='/manager' element={<SignManager />}></Route>
+        <Route path='/phones' element={<PhonesCategory />}></Route>
+        <Route path='/laptops' element={<LaptopCategory />}></Route>
+        <Route path='/smartwatches' element={<SmartWatchCategory />}></Route>
+        <Route path='/card' element={<CardUpload />}></Route>
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
