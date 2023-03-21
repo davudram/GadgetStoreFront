@@ -90,7 +90,8 @@ h2 {
   height: 700px;
   width: 1000px;
   margin: 0 auto;
-  padding-top: 17px;
+  padding-top: 5%;
+  padding-bottom: 6%;
   display: flex;
   flex-wrap: wrap;
 }
@@ -232,7 +233,7 @@ h2 {
   transition: 0.5s ease-out;
   border-radius: 10px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  margin-left: 10px;
+  margin-left: 3%;
   margin-top: 5.5%;
   float: left;
 }
@@ -313,7 +314,7 @@ h2 {
 
 
 .cart-item-details {
-  display: flex;
+  display: contents;
   flex-direction: column;
 }
 
@@ -363,8 +364,7 @@ h2 {
 }
 
 .faq-info {
-  margin-top: 100em;
-  margin-bottom: 8%;
+  margin-top: 85em;
 }
 
 .ask {
@@ -471,13 +471,38 @@ h2 {
 }
 
 #btn-upload {
-  background: rgb(0,140,255);
-  box-shadow: 0 0 25px rgb(0,140,255);
+  background: rgb(0, 140, 255);
+  box-shadow: 0 0 25px rgb(0, 140, 255);
 }
 
 #btn-upload:hover {
-  box-shadow: 0 0 5px rgb(0,140,255),
-              0 0 25px rgb(0,140,255),
-              0 0 50px rgb(0,140,255),
-              0 0 100px rgb(0,140,255);
+  box-shadow: 0 0 5px rgb(0, 140, 255),
+    0 0 25px rgb(0, 140, 255),
+    0 0 50px rgb(0, 140, 255),
+    0 0 100px rgb(0, 140, 255);
+}
+
+#minus-quantity,
+#plus-quantity {
+  background-color: #eee;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  height: 24px;
+  width: 24px;
+}
+
+#minus-quantity:hover,
+#plus-quantity:hover {
+  background-color: #ddd;
+}
+
+#quantity-value {
+  height: auto;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  width: 50px;
+  border: none;
 }
