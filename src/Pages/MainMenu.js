@@ -9,7 +9,7 @@ import { FiPlus } from "react-icons/fi";
 import { toast } from 'react-toastify';
 import CartItem from './CartItem';
 
-function MainMenu(props) {
+function MainMenu() {
 
     function getToken() {
         return sessionStorage.getItem("token");
@@ -22,6 +22,7 @@ function MainMenu(props) {
     const [cartItems, setCartItems] = useState([]);
     const [userName, setUserName] = useState(null);
     const [gadgetCount, setGadgetCount] = useState([]);
+    const [premiumGadgets, setPremiumGadgets] = useState([]);
     const [search, setSearch] = useState("");
     const [gadgets, setGadgets] = useState([]);
     const [gadgetList, setGadgetList] = useState(gadgetCount);
@@ -29,7 +30,7 @@ function MainMenu(props) {
     useEffect(() => {
         const getGadgetCount = async () => {
             try {
-                const response = await axios.get('https://aspazure20230228181346.azurewebsites.net/api/Gadgets/GadgetsList', {
+                const response = await axios.get('https://localhost:7108/api/Gadgets/GadgetsList', {
                     headers: {
                         'Authorization': 'Bearer ' + getToken(),
                         'Accept': 'application/json',
@@ -42,7 +43,23 @@ function MainMenu(props) {
             }
         };
 
-        fetch('https://aspazure20230228181346.azurewebsites.net/api/Managers/UserId', {
+        const getPremiumGadgets = async () => {
+            try {
+                const response = await axios.get('https://localhost:7108/api/Gadgets/SearchByIsPremium?checkPremium=True', {
+                    headers: {
+                        'Authorization': 'Bearer ' + getToken(),
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                });
+                setPremiumGadgets(response.data);
+            }
+            catch (error) {
+                console.error(error);
+            }
+        }
+
+        fetch('https://localhost:7108/api/Managers/UserId', {
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
                 'Accept': 'application/json',
@@ -63,43 +80,15 @@ function MainMenu(props) {
             });
 
         getGadgetCount();
+        getPremiumGadgets();
     }, [], [search]);
 
     const handleSearchChange = (event) => {
         setSearch(event.target.value);
     };
 
-    function handleClick() {
-        const minValue = document.getElementById('minvalue').value;
-        const maxValue = document.getElementById('maxvalue').value;
-        findGadgets(minValue, maxValue);
-    }
-
-    function findGadgets(minPrice, maxPrice) {
-        fetch(`https://aspazure20230228181346.azurewebsites.net/api/Gadgets/FilterPriceGadgets?minPrice=${minPrice}&maxPrice=${maxPrice}`, {
-            headers: {
-                'Authorization': 'Bearer ' + getToken(),
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(response.status);
-                }
-                return response.json();
-            })
-            .then(data => {
-                setGadgetList(data);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
-
-
     const handleSearchClick = () => {
-        fetch(`https://aspazure20230228181346.azurewebsites.net/api/Gadgets/SearchGadgetsList?search=${search}`, {
+        fetch(`https://localhost:7108/api/Gadgets/SearchGadgetsList?search=${search}`, {
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
                 'Accept': 'application/json',
@@ -126,13 +115,13 @@ function MainMenu(props) {
             productName: gadget.name,
             productImage: gadget.image,
             price: gadget.price,
-            quantity: props.gadgetState,
+            quantity: 1,
             userId: userName,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
 
-        fetch('https://aspazure20230228181346.azurewebsites.net/api/Cart/AddCart', {
+        fetch('https://localhost:7108/api/Cart/AddCart', {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
@@ -154,7 +143,7 @@ function MainMenu(props) {
     }
 
     const handleDelCart = (productId) => {
-        fetch(`https://aspazure20230228181346.azurewebsites.net/api/Cart/DeleteCart?Id=${productId}`, {
+        fetch(`https://localhost:7108/api/Cart/DeleteCart?Id=${productId}`, {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
@@ -247,35 +236,30 @@ function MainMenu(props) {
                     <button id='soon'>On sale soon</button>
                 </div>
 
+                <h1>Premium Gadgets</h1>
+                <div className='cards-premium-gadgets'>
+                    {premiumGadgets.map(premium => (
+                        <div className='premium-card' key={premium.id}>
+                            <span></span>
+                            <img src={`${premium.image}`} className="regular-img" style={{ height: 130, width: 100 }}></img>
+                            <h2>{premium.name}</h2>
+                            <p>{premium.price} USD</p>
+                            <button className="buy-button" onClick={() => handleAddToCart(premium)}>Add to Cart</button>
+                        </div>
+                    ))}
+                </div>
 
                 <div className='content'>
-                    <div className='filter'>
-                        <h1>Filter</h1>
-                        <input id="minvalue" type="number" placeholder='Enter min price'></input>
-                        <input id="maxvalue" type="number" placeholder='Enter max price'></input>
-                        <button id="findGadget" onClick={handleClick}>Find</button>
-                    </div>
                     <h1>Gadgets</h1>
                     <div className="cards-gadget">
-                        {gadgetList.length > 0 ? (
-                            gadgetList.map(gadget => (
-                                <div className='card' key={gadget.id}>
-                                    <img src={`${gadget.image}`} className="regular-img" style={{ height: 130, width: 100 }}></img>
-                                    <h2>{gadget.name}</h2>
-                                    <p>{gadget.price} USD</p>
-                                    <button className="buy-button" onClick={() => handleAddToCart(gadget)}>Add to Cart</button>
-                                </div>
-                            ))
-                        ) : (
-                            gadgetCount.map(gadget => (
-                                <div className='card' key={gadget.id}>
-                                    <img src={`${gadget.image}`} className="regular-img" style={{ height: 130, width: 100 }}></img>
-                                    <h2>{gadget.name}</h2>
-                                    <p>{gadget.price} USD</p>
-                                    <button className="buy-button" onClick={() => handleAddToCart(gadget)}>Add to Cart</button>
-                                </div>
-                            ))
-                        )}
+                        {gadgetCount.map(gadget => (
+                            <div className='card' key={gadget.id}>
+                                <img src={`${gadget.image}`} className="regular-img" style={{ height: 130, width: 100 }}></img>
+                                <h2>{gadget.name}</h2>
+                                <p>{gadget.price} USD</p>
+                                <button className="buy-button" onClick={() => handleAddToCart(gadget)}>Add to Cart</button>
+                            </div>
+                        ))}
                     </div>
                 </div>
 

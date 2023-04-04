@@ -1,10 +1,13 @@
   .window-reg {
     padding: 15px;
-    height: 340px;
+    height: 350px;
     width: 300px;
-    margin: auto;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   #reg {

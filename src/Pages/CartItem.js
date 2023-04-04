@@ -1,26 +1,98 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function CartItem(props) {
+
+    function getToken() {
+        return sessionStorage.getItem('token');
+    }
+
+    const navigate = useNavigate();
     const [gadgetState, setGadgetState] = useState(1);
 
     const updateQuantity = (event) => {
         const inputValue = event.target.value;
-        if (!isNaN(inputValue) && inputValue !=0) {
-            setGadgetState(parseInt(inputValue, 10));
+        if (!isNaN(inputValue) && inputValue != 0) {
+            const updatedCartItem = {
+                ProductId: props.item.productId,
+                ProductName: props.item.productName,
+                ProductImage: props.item.productImage,
+                Price: props.item.price * gadgetState,
+                Quantity: parseInt(inputValue, 10),
+                UserId: props.item.userId,
+                CreatedAt: props.item.createdAt,
+                UpdatedAt: new Date().toISOString()
+            };
+
+
+            fetch('https://localhost:7108/api/Cart/UpdateCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + getToken()
+                },
+                body: JSON.stringify(updatedCartItem)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    setGadgetState(parseInt(inputValue, 10));
+                })
+                .catch(error => console.error(error));
         }
+    }
+
+    const editCount = (updatedValue, updatedEdit) => {
+        fetch('https://localhost:7108/api/Cart/UpdateCart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + getToken()
+            },
+            body: JSON.stringify(updatedEdit)
+        })
+            .then(response => response.json())
+            .then(data => {
+                setGadgetState(updatedValue);
+            })
+            .catch(error => console.error(error));
     }
 
     const addCount = () => {
         if ((Number)(gadgetState) === 999) { return; }
-        document.getElementById(`quantity-value-${props.productId}`).value = (Number)(gadgetState) + 1;
-        setGadgetState(Number(gadgetState) + 1);
+        const updatedValue = Number(gadgetState) + 1;
+        document.getElementById(`quantity-value-${props.productId}`).value = updatedValue;
+        setGadgetState(updatedValue);
+        const updatedAdd = {
+            ProductId: props.item.productId,
+            ProductName: props.item.productName,
+            ProductImage: props.item.productImage,
+            Price: props.item.price * gadgetState,
+            Quantity: updatedValue,
+            UserId: props.item.userId,
+            CreatedAt: props.item.createdAt,
+            UpdatedAt: new Date().toISOString()
+        };
+        editCount(updatedValue, updatedAdd);
     }
 
     const removeCount = () => {
         if ((Number)(gadgetState) === 1) { return; }
-        document.getElementById(`quantity-value-${props.productId}`).value = (Number)(gadgetState) - 1;
-        setGadgetState(Number(gadgetState) - 1);
+        const updatedValue = Number(gadgetState) - 1;
+        document.getElementById(`quantity-value-${props.productId}`).value = updatedValue;
+        setGadgetState(updatedValue);
+        const updatedRemove = {
+            ProductId: props.item.productId,
+            ProductName: props.item.productName,
+            ProductImage: props.item.productImage,
+            Price: props.item.price * gadgetState,
+            Quantity: updatedValue,
+            UserId: props.item.userId,
+            CreatedAt: props.item.createdAt,
+            UpdatedAt: new Date().toISOString()
+        };
+        editCount(updatedValue, updatedRemove);
     }
+
 
     return (
         <div className='cart-item' key={props.item.productId}>
@@ -28,9 +100,10 @@ function CartItem(props) {
             <div className="cart-item-details">
                 <h3>{props.item.productName}</h3>
                 <button id='minus-quantity' onClick={removeCount}>-</button>
-                <input id={`quantity-value-${props.productId}`} onChange={updateQuantity} value={gadgetState} style={{width: '10%', textAlign: 'center'}}></input>
+                <input id={`quantity-value-${props.productId}`} onChange={updateQuantity} value={gadgetState} style={{ width: '10%', textAlign: 'center' }}></input>
                 <button id='plus-quantity' onClick={addCount}>+</button>
                 <p>{props.item.price * gadgetState} USD</p>
+                <button className="buy-button" onClick={() => navigate('/buyforms')}>Buy</button>
             </div>
             <button id="remove" onClick={() => { props.handleDelCart(props.item.productId) }}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" height="25" width="25">

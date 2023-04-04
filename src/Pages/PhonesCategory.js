@@ -17,25 +17,23 @@ function PhonesCategory() {
     const [phoneCount, setPhoneCount] = useState([]);
     const [gadgetList, setGadgetList] = useState(phoneCount);
     const [userName, setUserName] = useState(null);
+    const [sortId, setSortId] = useState(1);
+
+    const getGadgetCount = () => {
+
+        axios({
+            method: 'get',
+            url: 'https://localhost:7108/api/Gadgets/SelectedForCategory?idcategory=1',
+            headers: {
+                'Authorization': 'Bearer ' + getToken(),
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        }).then((response) => { setPhoneCount(response.data) });
+    };
 
     useEffect(() => {
-
-        const getGadgetCount = async () => {
-            try {
-                const response = await axios.get('https://aspazure20230228181346.azurewebsites.net/api/Gadgets/SelectedForCategory?idcategory=1', {
-                    headers: {
-                        'Authorization': 'Bearer ' + getToken(),
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                });
-                setPhoneCount(response.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetch('https://aspazure20230228181346.azurewebsites.net/api/Managers/UserId', {
+        fetch('https://localhost:7108/api/Managers/UserId', {
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
                 'Accept': 'application/json',
@@ -56,7 +54,7 @@ function PhonesCategory() {
             });
 
         getGadgetCount();
-    });
+    }, []);
 
     const handleAddToCart = (gadget) => {
         const cartItem = {
@@ -70,7 +68,7 @@ function PhonesCategory() {
             updatedAt: new Date().toISOString()
         };
 
-        fetch('https://aspazure20230228181346.azurewebsites.net/api/Cart/AddCart', {
+        fetch('https://localhost:7108/api/Cart/AddCart', {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
@@ -93,7 +91,7 @@ function PhonesCategory() {
 
     const handleDelCart = (item) => {
 
-        fetch(`https://aspazure20230228181346.azurewebsites.net/api/Cart/DeleteCart?Id=${item}`, {
+        fetch(`https://localhost:7108/api/Cart/DeleteCart?Id=${item}`, {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
@@ -121,7 +119,7 @@ function PhonesCategory() {
     }
 
     function findGadgets(minPrice, maxPrice) {
-        fetch(`https://aspazure20230228181346.azurewebsites.net/api/Gadgets/FilterPriceByIdCategory?minPrice=${minPrice}&maxPrice=${maxPrice}&idcategory=1`, {
+        fetch(`https://localhost:7108/api/Gadgets/FilterPriceByIdCategory?minPrice=${minPrice}&maxPrice=${maxPrice}&idcategory=1`, {
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
                 'Accept': 'application/json',
@@ -140,6 +138,10 @@ function PhonesCategory() {
             .catch(error => {
                 console.error(error);
             });
+    }
+
+    const handleSortSelect = (e) => {
+        setSortId(e.target.value);
     }
 
     const handleOpenCart = () => {
@@ -169,7 +171,7 @@ function PhonesCategory() {
                         {cartItems.length > 0 ? (
                             <div className="cart-items">
                                 {cartItems.map(item => (
-                                    <CartItem item = {item} handleDelCart = {handleDelCart}/>
+                                    <CartItem item={item} handleDelCart={handleDelCart} />
                                 ))}
                             </div>
                         ) : (
@@ -179,6 +181,14 @@ function PhonesCategory() {
                     </div>
                 )}
 
+                <div className='sort-gadget'>
+                    <select onChange={handleSortSelect} defaultValue={0}>
+                        <option disabled value={0}>Select sort value</option>
+                        <option value={1}>Minimum value</option>
+                        <option value={2}>Maximum value</option>
+                    </select>
+                </div>
+
                 <div className='filter'>
                     <h1>Filter</h1>
                     <input id="minvalue" type="number" placeholder='Enter min price'></input>
@@ -187,7 +197,7 @@ function PhonesCategory() {
                 </div>
 
                 <h1>Phones</h1>
-                <div className="cards-gadget">
+                <div className="cards-phones">
                     {gadgetList.length > 0 ? (
                         gadgetList.map(gadget => (
                             <div className='card' key={gadget.id}>
@@ -198,7 +208,9 @@ function PhonesCategory() {
                             </div>
                         ))
                     ) : (
-                        phoneCount.map(gadget => (
+                        phoneCount.sort((a, b) => {
+                            return sortId === '2' ? b.price - a.price : a.price - b.price
+                        }).map(gadget => (
                             <div className='card' key={gadget.id}>
                                 <img src={`${gadget.image}`} className="regular-img" style={{ height: 130, width: 100 }}></img>
                                 <h2>{gadget.name}</h2>

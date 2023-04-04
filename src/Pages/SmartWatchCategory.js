@@ -17,12 +17,13 @@ function LaptopCategory() {
     const [watchCount, setWatchCount] = useState([]);
     const [gadgetList, setGadgetList] = useState(watchCount);
     const [userName, setUserName] = useState(null);
+    const [sortId, setSortId] = useState(1);
 
     useEffect(() => {
 
         const getGadgetCount = async () => {
             try {
-                const response = await axios.get('https://aspazure20230228181346.azurewebsites.net/api/Gadgets/SelectedForCategory?idcategory=3', {
+                const response = await axios.get('https://localhost:7108/api/Gadgets/SelectedForCategory?idcategory=3', {
                     headers: {
                         'Authorization': 'Bearer ' + getToken(),
                         'Accept': 'application/json',
@@ -35,7 +36,7 @@ function LaptopCategory() {
             }
         };
 
-        fetch('https://aspazure20230228181346.azurewebsites.net/api/Managers/UserId', {
+        fetch('https://localhost:7108/api/Managers/UserId', {
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
                 'Accept': 'application/json',
@@ -71,7 +72,7 @@ function LaptopCategory() {
             updatedAt: new Date().toISOString()
         };
 
-        fetch('https://aspazure20230228181346.azurewebsites.net/api/Cart/AddCart', {
+        fetch('https://localhost:7108/api/Cart/AddCart', {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
@@ -99,7 +100,7 @@ function LaptopCategory() {
     }
 
     function findGadgets(minPrice, maxPrice) {
-        fetch(`https://aspazure20230228181346.azurewebsites.net/api/Gadgets/FilterPriceByIdCategory?minPrice=${minPrice}&maxPrice=${maxPrice}&idcategory=3`, {
+        fetch(`https://localhost:7108/api/Gadgets/FilterPriceByIdCategory?minPrice=${minPrice}&maxPrice=${maxPrice}&idcategory=3`, {
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
                 'Accept': 'application/json',
@@ -122,7 +123,7 @@ function LaptopCategory() {
 
     const handleDelCart = (item) => {
 
-        fetch(`https://aspazure20230228181346.azurewebsites.net/api/Cart/DeleteCart?Id=${item}`, {
+        fetch(`https://localhost:7108/api/Cart/DeleteCart?Id=${item}`, {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
@@ -141,6 +142,10 @@ function LaptopCategory() {
                 setCartItems(updatedCartItems);
             })
             .catch(error => console.error(error));
+    }
+
+    const handleSortSelect = (e) => {
+        setSortId(e.target.value);
     }
 
     const handleOpenCart = () => {
@@ -169,8 +174,8 @@ function LaptopCategory() {
                         <h2>Your Cart</h2>
                         {cartItems.length > 0 ? (
                             <div className="cart-items">
-                                 {cartItems.map(item => (
-                                    <CartItem item = {item} handleDelCart = {handleDelCart}/>
+                                {cartItems.map(item => (
+                                    <CartItem item={item} handleDelCart={handleDelCart} />
                                 ))}
                             </div>
                         ) : (
@@ -180,6 +185,14 @@ function LaptopCategory() {
                     </div>
                 )}
 
+                <div className='sort-gadget'>
+                    <select onChange={handleSortSelect} defaultValue={0}>
+                        <option disabled value={0}>Select sort value</option>
+                        <option value={1}>Minimum value</option>
+                        <option value={2}>Maximum value</option>
+                    </select>
+                </div>
+
                 <div className='filter'>
                     <h1>Filter</h1>
                     <input id="minvalue" type="number" placeholder='Enter min price'></input>
@@ -188,7 +201,7 @@ function LaptopCategory() {
                 </div>
 
                 <h1>Smart Watches</h1>
-                <div className="cards-gadget">
+                <div className="cards-watches">
                     {gadgetList.length > 0 ? (
                         gadgetList.map(gadget => (
                             <div className='card' key={gadget.id}>
@@ -199,7 +212,9 @@ function LaptopCategory() {
                             </div>
                         ))
                     ) : (
-                        watchCount.map(gadget => (
+                        watchCount.sort((a, b) => {
+                            return sortId === '2' ? b.price - a.price : a.price - b.price
+                        }).map(gadget => (
                             <div className='card' key={gadget.id}>
                                 <img src={`${gadget.image}`} className="regular-img" style={{ height: 130, width: 100 }}></img>
                                 <h2>{gadget.name}</h2>

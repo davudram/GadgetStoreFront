@@ -20,7 +20,7 @@ function App() {
             const password = document.getElementById('password-enter').value;
             axios({
               method: 'post',
-              url: 'https://aspazure20230228181346.azurewebsites.net/api/Authenticate/login',
+              url: 'https://localhost:7108/api/Authenticate/login',
               data: {
                 "userName": userName,
                 "password": password

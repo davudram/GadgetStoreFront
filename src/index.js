@@ -6,13 +6,15 @@ import reportWebVitals from './reportWebVitals';
 import SignAdmin from './Pages/SignAdmin';
 import Registration from './Pages/Registration';
 import MainMenu from './Pages/MainMenu';
-import CategoryTables from './Pages/CategoryTables';
+import AdminPanels from './Pages/AdminPanels';
 import SignManager from './Pages/SignManager';
 import PhonesCategory from './Pages/PhonesCategory';
 import LaptopCategory from './Pages/LaptopCategory';
 import SmartWatchCategory from './Pages/SmartWatchCategory';
+import BuyGadgetsPage from './Pages/BuyGadgetsPage';
 import CardUpload from './Pages/CardUpload';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -22,13 +24,14 @@ root.render(
         <Route path='/' element={<App />}></Route>
         <Route path='/menu' element={<MainMenu />}></Route>
         <Route path='/registration' element={<Registration />}></Route>
-        <Route path='/table' element={<CategoryTables />}></Route>
+        <Route path='/table' element={<AdminPanels />}></Route>
         <Route path='/admin' element={<SignAdmin />}></Route>
         <Route path='/manager' element={<SignManager />}></Route>
         <Route path='/phones' element={<PhonesCategory />}></Route>
         <Route path='/laptops' element={<LaptopCategory />}></Route>
         <Route path='/smartwatches' element={<SmartWatchCategory />}></Route>
         <Route path='/card' element={<CardUpload />}></Route>
+        <Route path='/buyforms' element={<BuyGadgetsPage />}></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

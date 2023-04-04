@@ -38,7 +38,7 @@ function CardUpload() {
         formData.append('files', selectedFile);
 
         try {
-            const response = await axios.post('https://aspazure20230228181346.azurewebsites.net/api/Gadgets/Upload', formData, {
+            const response = await axios.post('https://localhost:7108/api/Gadgets/Upload', formData, {
                 headers: {
                     'Authorization': 'Bearer ' + getToken(),
                     'Content-Type': 'multipart/form-data',
