@@ -229,13 +229,6 @@ function MainMenu() {
                     </div>
                 </Carousel>
 
-                <div className='advertising'>
-                    <img src='https://yellow.ua/media/specialaction/image/_/1/x_1_3.jpg.pagespeed.ic.i3WZBAsTKB.webp' style={{ width: '50%', float: 'left', margin: 10 }}></img>
-                    <img src='https://yellow.ua/media/catalog/product/cache/8/small_image/211x211/9df78eab33525d08d6e5fb8d27136e95/9/3/x9374067_r_z001a.jpg.pagespeed.ic.N2FTl4h3uR.webp' style={{ float: 'left', margin: 10 }}></img>
-                    <p>Dyson Supersonic Hair Dryer (Iron/Fuchsia) HD07</p>
-                    <button id='soon'>On sale soon</button>
-                </div>
-
                 <h1>Premium Gadgets</h1>
                 <div className='cards-premium-gadgets'>
                     {premiumGadgets.map(premium => (

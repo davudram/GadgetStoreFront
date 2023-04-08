@@ -7,7 +7,6 @@ import SignAdmin from './Pages/SignAdmin';
 import Registration from './Pages/Registration';
 import MainMenu from './Pages/MainMenu';
 import AdminPanels from './Pages/AdminPanels';
-import SignManager from './Pages/SignManager';
 import PhonesCategory from './Pages/PhonesCategory';
 import LaptopCategory from './Pages/LaptopCategory';
 import SmartWatchCategory from './Pages/SmartWatchCategory';
@@ -26,7 +25,6 @@ root.render(
         <Route path='/registration' element={<Registration />}></Route>
         <Route path='/table' element={<AdminPanels />}></Route>
         <Route path='/admin' element={<SignAdmin />}></Route>
-        <Route path='/manager' element={<SignManager />}></Route>
         <Route path='/phones' element={<PhonesCategory />}></Route>
         <Route path='/laptops' element={<LaptopCategory />}></Route>
         <Route path='/smartwatches' element={<SmartWatchCategory />}></Route>

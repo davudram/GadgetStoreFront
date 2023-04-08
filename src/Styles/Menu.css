@@ -339,30 +339,6 @@ h2 {
   margin-top: 27%;
 }
 
-.advertising {
-  width: 90%;
-  height: 270px;
-  border-radius: 20px;
-  padding: 1px;
-  background: #ffffff;
-  box-shadow: 20px 20px 60px #bebebe,
-    -20px -20px 60px #ffffff;
-  margin: auto;
-  margin-top: 5%;
-  margin-bottom: 6%;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  text-align: center;
-  font-size: 30px;
-}
-
-#soon {
-  height: 40px;
-  width: 140px;
-  background: none;
-  border-radius: 10px;
-  font-size: 18px;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-}
 
 .faq-info {
   margin-top: 40em;
