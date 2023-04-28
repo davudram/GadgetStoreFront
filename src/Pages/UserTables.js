@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-function CategoryGadgetTables(props) {
+function UserTables(props) {
 
     function getToken() {
         return sessionStorage.getItem('token');
@@ -12,23 +12,25 @@ function CategoryGadgetTables(props) {
     useEffect(() => {
         axios({
             method: 'GET',
-            url: 'https://localhost:7108/api/Categories/CategoryList',
+            url: 'https://localhost:7108/api/Managers/selectUser',
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
         }).then(response => {
-            props.setCategory(response.data);
+            props.setUser(response.data);
         })
     }, [])
 
-    const handleClickDel = (categories) => {
+    const handleClickDel = (users) => {
         axios({
             method: 'POST',
-            url: 'https://localhost:7108/api/Categories/DeleteCategory',
+            url: 'https://localhost:7108/api/Managers/delManager',
             data: {
-                "id": categories.id
+                "userName": users.userName,
+                "password": "string",
+                "email": "string"
             },
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
@@ -36,7 +38,7 @@ function CategoryGadgetTables(props) {
                 'Content-Type': 'application/json'
             }
         }).then((data) => {
-            props.category.splice(props.category.indexOf(categories), 1);
+            props.user.splice(props.user.indexOf(users), 1);
             setUpdater(updater + 1);
             alert("Succsessfull!");
         });
@@ -44,22 +46,24 @@ function CategoryGadgetTables(props) {
 
 
     return (
-        <div className="table-gadgets">
-            <h1>Category</h1>
+        <div className="table-users">
+            <h1>Users</h1>
             <table className="table">
                 <thead>
                     <tr>
                         <th scope="col">ID</th>
-                        <th scope="col">Category</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
                         <th scope="col">Edit</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {props.category.map((categories, index) => (
+                    {props.user.map((users, index) => (
                         <tr key={index}>
-                            <td>{categories.id}</td>
-                            <td>{categories.nameGadgets}</td>
-                            <td><button className='del-btn-category' onClick={() => {handleClickDel(categories)}}>Delete</button></td>
+                            <td>{users.id}</td>
+                            <td>{users.userName}</td>
+                            <td>{users.email}</td>
+                            <td><button className='del-btn-user' onClick={() => {handleClickDel(users)}}>Delete</button></td>
                         </tr>
                     ))}
                 </tbody>
@@ -68,4 +72,4 @@ function CategoryGadgetTables(props) {
     )
 }
 
-export default CategoryGadgetTables;
+export default UserTables;

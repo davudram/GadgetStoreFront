@@ -25,9 +25,9 @@ function CartItemsTables(props) {
                         <th scope="col">Edit</th>
                     </tr>
                 </thead>
-                {props.itemProd.map(carts => (
-                    <tbody className='tbody' key={carts.id}>
-                        <tr>
+                <tbody>
+                    {props.itemProd.map((carts, index) => (
+                        <tr key={index}>
                             <td><img src={`${carts.productImage}`} style={{ width: 80, height: 100 }} /></td>
                             <td>{carts.id}</td>
                             <td>{carts.productName}</td>
@@ -53,8 +53,8 @@ function CartItemsTables(props) {
                                 });
                             }}>Delete</button></td>
                         </tr>
-                    </tbody>
-                ))}
+                    ))}
+                </tbody>
             </table>
         </div>
     )

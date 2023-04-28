@@ -7,6 +7,8 @@ import GadgetsTables from './GadgetTables';
 import CartItemsTables from './CartItemsTables';
 import '../Styles/CategoryTable.css';
 import AddCategoryComponent from './AddCategoryComponent';
+import UserTables from './UserTables';
+import AddManager from './AddManager';
 
 function AdminPanels() {
 
@@ -19,6 +21,7 @@ function AdminPanels() {
     const [cartsItems, setCartsItems] = useState([]);
     const [gadgets, setGadgets] = useState([]);
     const [category, setCategory] = useState([]);
+    const [user, setUser] = useState([]);
 
     useEffect(() => {
         axios({
@@ -54,71 +57,18 @@ function AdminPanels() {
                 <CategoryGadgetTables category={category} setCategory={setCategory} />
                 <GadgetsTables gadgets={gadgets} setGadgets={setGadgets} />
                 <CartItemsTables itemProd={cartsItems} />
+                {userRole === 'Admin' && (
+                    <UserTables user={user} setUser={setUser} />
+                )}
 
                 <h1>Edit Data</h1>
                 <div id="for-crud">
                     {userRole === 'Admin' && (
-                        <div className="container">
-                            <h1>Create Manager</h1>
-                            <input id="add-login" type="text" className="input" placeholder="Enter login" />
-                            <input id="add-password" type="text" className="input" placeholder="Enter password" />
-                            <input id="add-email" type="text" className="input" placeholder="Enter email" />
-                            <br /><button id="add-manager" onClick={() => {
-                                const login = document.getElementById('add-login').value;
-                                const password = document.getElementById('add-password').value;
-                                const email = document.getElementById('add-email').value;
-                                axios({
-                                    method: 'POST',
-                                    url: 'https://localhost:7108/api/Authenticate/regManager',
-                                    data: {
-                                        "userName": login,
-                                        "password": password,
-                                        "email": email
-                                    },
-                                    dataType: 'dataType',
-                                    headers: {
-                                        'Authorization': 'Bearer ' + getToken(),
-                                        'Accept': 'application/json',
-                                        'Content-Type': 'application/json'
-                                    },
-                                }).then(data => alert("Succsessfull"))
-                            }}>Create</button>
-                        </div>
+                        <AddManager user={user} setUser={setUser} />
                     )}
 
-                    {userRole === 'Admin' && (
-                        <div className="container">
-                            <h1>Delete Manager</h1>
-                            <input id="del-login" type="text" className="input" placeholder="Enter login" />
-                            <br />
-                            <button id="del-manager" onClick={() => {
-                                const userName = document.getElementById('del-login').value;
-                                axios({
-                                    method: 'POST',
-                                    url: 'https://localhost:7108/api/Managers/delManager',
-                                    data: {
-                                        "userName": userName,
-                                        "password": "string",
-                                        "email": "string"
-                                    },
-                                    dataType: 'dataType',
-                                    headers: {
-                                        'Authorization': 'Bearer ' + getToken(),
-                                        'Accept': 'application/json',
-                                        'Content-Type': 'application/json'
-                                    },
-                                }).then(function (response) {
-                                    alert('Manager deleted successfully!');
-                                })
-                                    .catch(function (error) {
-                                        alert('An error occurred while deleting user with username ' + userName);
-                                    });
-                            }}>Delete</button>
-                        </div>
-                    )}
-
-                    <AddCategoryComponent category={category} setCategory={setCategory}/>
-                    <AddProductComponent gadgets={gadgets} setGadgets={setGadgets}/>
+                    <AddCategoryComponent category={category} setCategory={setCategory} />
+                    <AddProductComponent gadgets={gadgets} setGadgets={setGadgets} />
                 </div>
 
                 <div id="myModal" className="modal">

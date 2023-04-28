@@ -166,7 +166,7 @@ h1 {
 .container {
   padding: 15px;
   height: 400px;
-  width: 270px;
+  width: 300px;
   margin: auto;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
@@ -253,6 +253,20 @@ h1 {
   background-color: #c0392b;
 }
 
+.del-btn-user {
+  padding: 8px 12px;
+  border: none;
+  background-color: #d63031;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.del-btn-user:hover {
+  background-color: #c0392b;
+}
 
 .edit-btn {
   padding: 8px 12px;

@@ -25,14 +25,13 @@
   color: #444444;
 }
 
-Link {
+a {
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif, sans-serif;
-  font-size: 14px;
+  font-size: 15px;
   text-align: center;
   text-decoration: none;
   color: #999999;
   padding: 10px;
-  display: block;
 }
 
 input {

@@ -7,14 +7,6 @@ function BuyGadgetsPage() {
             <h1>Send form</h1>
             <div className="forms-container">
                 <div className="buy-forms">
-                    <div className="personal-data">
-                        <h1>Billing Address</h1>
-                        <input type='text' placeholder="FullName"></input>
-                        <input type='text' placeholder="Address"></input>
-                        <input type='text' placeholder="City"></input>
-                        <input type='text' placeholder="State"></input>
-                        <input type='number' placeholder="Zip"></input>
-                    </div>
                     <div className="card-data">
                         <h1>Payment</h1>
                         <input type='text' placeholder="Name on Card"></input>
