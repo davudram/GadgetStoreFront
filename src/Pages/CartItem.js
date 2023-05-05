@@ -103,7 +103,6 @@ function CartItem(props) {
                 <input id={`quantity-value-${props.productId}`} onChange={updateQuantity} value={gadgetState} style={{ width: '10%', textAlign: 'center' }}></input>
                 <button id='plus-quantity' onClick={addCount}>+</button>
                 <p>{props.item.price * gadgetState} USD</p>
-                <button className="buy-button" onClick={() => navigate('/buyforms')}>Buy</button>
             </div>
             <button id="remove" onClick={() => { props.handleDelCart(props.item.productId) }}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" height="25" width="25">

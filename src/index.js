@@ -10,7 +10,6 @@ import AdminPanels from './Pages/AdminPanels';
 import PhonesCategory from './Pages/PhonesCategory';
 import LaptopCategory from './Pages/LaptopCategory';
 import SmartWatchCategory from './Pages/SmartWatchCategory';
-import BuyGadgetsPage from './Pages/BuyGadgetsPage';
 import CardUpload from './Pages/CardUpload';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
@@ -29,7 +28,6 @@ root.render(
         <Route path='/laptops' element={<LaptopCategory />}></Route>
         <Route path='/smartwatches' element={<SmartWatchCategory />}></Route>
         <Route path='/card' element={<CardUpload />}></Route>
-        <Route path='/buyforms' element={<BuyGadgetsPage />}></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
