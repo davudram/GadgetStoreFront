@@ -1,43 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import axios from "axios";
 import '../Styles/Upload.css';
 
 function UploadForm() {
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [fileName, setFileName] = useState('');
 
-    const handleFileInputChange = (event) => {
-        setSelectedFile(event.target.files[0]);
-        setFileName(event.target.files[0].name);
+    function getToken() {
+        return sessionStorage.getItem('token');
+    }
+
+    const [file, setFile] = useState();
+    const [fileName, setFileName] = useState();
+    const [imageUrl, setImageUrl] = useState();
+
+    const saveFile = (e) => {
+        console.log(e.target.files[0]);
+        setFile(e.target.files[0]);
+        setFileName(e.target.files[0].name);
     };
 
-    const handleUploadButtonClick = async () => {
+    const uploadFile = async (e) => {
+        console.log(file);
         const formData = new FormData();
-        formData.append('file', selectedFile);
-
-        const response = await fetch('https://localhost:7108/api/Gadgets/Upload', {
-            method: 'POST',
-            body: formData,
-        });
-
-        if (response.ok) {
-            const { fileName } = await response.json();
-            alert(`File '${fileName}' uploaded successfully.`);
-        } else {
-            alert('An error occurred while uploading the file.');
+        formData.append("formFile", file);
+        formData.append("fileName", fileName);
+        try {
+            const res = await axios.post("https://localhost:7108/api/Gadgets/Upload", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': 'Bearer ' + getToken()
+                }
+            });
+            console.log(res);
+            alert("File uploaded successfully: " + res.data);
+        } catch (ex) {
+            console.log(ex);
         }
     };
 
     return (
-        <div className="upload-form-container">
-            <h2 className="upload-form-header">Upload Form</h2>
-            <label className="upload-form-label" htmlFor="file-input">Choose a file:</label>
-            <input className="upload-form-input" type="file" id="file-input" onChange={handleFileInputChange} />
-            <button className="upload-form-button" onClick={handleUploadButtonClick} disabled={!selectedFile}>
-                Upload
-            </button>
-            <p className="upload-form-filename">{fileName}</p>
+        <div className="upload-form">
+            <h1>Upload File</h1>
+            <div className="form-group">
+                <label>Choose a file to upload:</label>
+                <input type="file" onChange={saveFile} />
+            </div>
+            <div className="form-group">
+                <input type="button" value="Upload" onClick={uploadFile} />
+            </div>
+            {imageUrl && (
+                <div className="form-group">
+                    <label>Uploaded image URL:</label>
+                    <a href={imageUrl} target="_blank" rel="noopener noreferrer">{imageUrl}</a>
+                </div>
+            )}
         </div>
     );
 };
+
 
 export default UploadForm;
