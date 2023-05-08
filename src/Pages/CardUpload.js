@@ -1,120 +1,43 @@
-import axios from 'axios';
-import { useDropzone } from 'react-dropzone';
-import { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import { Card } from 'react-bootstrap';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState } from 'react';
+import '../Styles/Upload.css';
 
-function CardUpload() {
-
-    function getToken() {
-        return sessionStorage.getItem('token');
-    }
-
+function UploadForm() {
     const [selectedFile, setSelectedFile] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [uploadProgress, setUploadProgress] = useState(0);
-    const [uploadStatus, setUploadStatus] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
+    const [fileName, setFileName] = useState('');
 
-    const onDrop = (acceptedFiles) => {
-        setSelectedFile(acceptedFiles[0]);
-        setImageUrl(URL.createObjectURL(acceptedFiles[0]));
+    const handleFileInputChange = (event) => {
+        setSelectedFile(event.target.files[0]);
+        setFileName(event.target.files[0].name);
     };
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
-    const uploadFile = async () => {
-        if (!selectedFile) {
-            toast.error('Please select a file to upload');
-            return;
-        }
-
-        setIsLoading(true);
-        setUploadProgress(0);
-        setUploadStatus('');
-
+    const handleUploadButtonClick = async () => {
         const formData = new FormData();
-        formData.append('files', selectedFile);
+        formData.append('file', selectedFile);
 
-        try {
-            const response = await axios.post('https://localhost:7108/api/Gadgets/Upload', formData, {
-                headers: {
-                    'Authorization': 'Bearer ' + getToken(),
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+        const response = await fetch('https://localhost:7108/api/Gadgets/Upload', {
+            method: 'POST',
+            body: formData,
+        });
 
-            setIsLoading(false);
-            setUploadProgress(100);
-            setUploadStatus('Success');
-            setImageUrl(response.data);
-
-            toast.success('File uploaded successfully');
-        } catch (error) {
-            setIsLoading(false);
-            setUploadProgress(0);
-            setUploadStatus('Error');
-
-            toast.error('Error uploading file');
+        if (response.ok) {
+            const { fileName } = await response.json();
+            alert(`File '${fileName}' uploaded successfully.`);
+        } else {
+            alert('An error occurred while uploading the file.');
         }
     };
 
     return (
-        <Card className="my-4" style={{ width: 800, height: 670, marginTop: 100 }}>
-            <h1>Upload Image</h1>
-            <Card.Body>
-                <div {...getRootProps()} className="dropzone">
-                    <input {...getInputProps()} />
-                    {isDragActive ? (
-                        <p>Drop the files here ...</p>
-                    ) : (
-                        <p>Click for upload files</p>
-                    )}
-                </div>
+        <div className="upload-form-container">
+            <h2 className="upload-form-header">Upload Form</h2>
+            <label className="upload-form-label" htmlFor="file-input">Choose a file:</label>
+            <input className="upload-form-input" type="file" id="file-input" onChange={handleFileInputChange} />
+            <button className="upload-form-button" onClick={handleUploadButtonClick} disabled={!selectedFile}>
+                Upload
+            </button>
+            <p className="upload-form-filename">{fileName}</p>
+        </div>
+    );
+};
 
-                <div className="file-upload-info">
-                    {selectedFile && (
-                        <div className="selected-file">
-                            <span className="file-name">{selectedFile.name}</span>
-                            <button className="btn btn-danger btn-sm" onClick={() => {
-                                setSelectedFile(null);
-                                setImageUrl('');
-                            }}>Delete</button>
-                        </div>
-                    )}
-
-                    {imageUrl && (
-                        <div className="uploaded-image">
-                            <img src={imageUrl} alt="Uploaded" />
-                        </div>
-                    )}
-
-                    {isLoading && (
-                        <div className="upload-progress">
-                            <div className="progress">
-                                <div
-                                    className="progress-bar progress-bar-striped progress-bar-animated"
-                                    role="progressbar"
-                                    aria-valuenow={uploadProgress}
-                                    aria-valuemin="0"
-                                    aria-valuemax="100"
-                                    style={{ width: `${uploadProgress}%` }}
-                                />
-                            </div>
-                            <div className="upload-status">{uploadStatus}</div>
-                        </div>
-                    )}
-
-                    <button className="btn btn-primary btn-block" onClick={uploadFile}>
-                        Upload
-                    </button>
-                </div>
-
-                <ToastContainer />
-            </Card.Body>
-        </Card>
-    )
-}
-
-export default CardUpload;
+export default UploadForm;
