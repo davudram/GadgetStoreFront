@@ -51,7 +51,7 @@ function CartItemsTables(props) {
                                     setUpdater(updater + 1);
                                     alert("Succsessfull!");
                                 });
-                            }}>Delete</button></td>
+                            }}>Accept</button></td>
                         </tr>
                     ))}
                 </tbody>

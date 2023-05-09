@@ -58,7 +58,14 @@ function AddProductComponent(props) {
                 <option value="False">False</option>
             </select>
             <br />
-            <button id="add-prod" onClick={AddGadget}>Create</button>
+            <button id="add-prod" onClick={() => {
+                if (isPremium != 0) {
+                    AddGadget();
+                }
+                else {
+                    alert("Error! You need to choose a premium product.");
+                }
+            }}>Create</button>
         </div>
     )
 }

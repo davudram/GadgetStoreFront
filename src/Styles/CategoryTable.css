@@ -226,7 +226,7 @@ h1 {
 .del-btn-order {
   padding: 8px 12px;
   border: none;
-  background-color: #d63031;
+  background-color: rgb(7, 193, 7);
   color: #fff;
   font-size: 14px;
   font-weight: 500;
@@ -235,7 +235,7 @@ h1 {
 }
 
 .del-btn-order:hover {
-  background-color: #c0392b;
+  background-color: rgb(7, 193, 7);
 }
 
 .del-btn {

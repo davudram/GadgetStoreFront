@@ -8,6 +8,7 @@ function SignAdmin() {
     const navigate = useNavigate();
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
+    const [userRole, setUserRole] = useState('');
 
     var item_value = sessionStorage.getItem("token");
     sessionStorage.setItem("token", item_value);
@@ -27,7 +28,27 @@ function SignAdmin() {
             },
         })
             .then(data => sessionStorage.setItem('token', data['data']['token']))
-            .then(response => { navigate('/table') })
+            .then(response => { CheckUser() })
+    }
+
+    const CheckUser = () => {
+        axios({
+            method: 'GET',
+            url: 'https://localhost:7108/api/Managers/getUserRole',
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        }).then(response => {
+            setUserRole(response.data.role);
+            if (userRole === 'user') {
+                alert("Forbidden enter for user!");
+            }
+            else {
+                navigate('/table');
+            }
+        })
     }
 
     return (

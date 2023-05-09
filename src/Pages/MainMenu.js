@@ -185,7 +185,7 @@ function MainMenu() {
                     <input placeholder="&#128269;Search" type="text" className="search" value={search} onChange={handleSearchChange}></input><br></br>
                     <button id="find-search" onClick={handleSearchClick}>Find</button>
                     {gadgets.length > 0 ? (
-                        <div className='search-gadgets' style={{ marginTop: '4%', marginBottom: '15%' }}>
+                        <div className='search-gadgets' style={{ marginTop: '4%', marginBottom: '32%' }}>
                             {gadgets.map((gadget) => (
                                 <div className='card' key={gadget.id}>
                                     <img src={`${gadget.image}`} className="regular-img" style={{ height: 130, width: 100 }}></img>
