@@ -18,6 +18,8 @@ function LaptopCategory() {
     const [gadgetList, setGadgetList] = useState(watchCount);
     const [userName, setUserName] = useState(null);
     const [sortId, setSortId] = useState(1);
+    const [minValue, setMinValue] = useState('');
+    const [maxValue, setMaxValue] = useState('');
 
     useEffect(() => {
 
@@ -93,14 +95,8 @@ function LaptopCategory() {
             });
     }
 
-    function handleClick() {
-        const minValue = document.getElementById('minvalue').value;
-        const maxValue = document.getElementById('maxvalue').value;
-        findGadgets(minValue, maxValue);
-    }
-
-    function findGadgets(minPrice, maxPrice) {
-        fetch(`https://localhost:7108/api/Gadgets/FilterPriceByIdCategory?minPrice=${minPrice}&maxPrice=${maxPrice}&idcategory=3`, {
+    function findGadgets() {
+        fetch(`https://localhost:7108/api/Gadgets/FilterPriceByIdCategory?minPrice=${minValue}&maxPrice=${maxValue}&idcategory=3`, {
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
                 'Accept': 'application/json',
@@ -121,9 +117,8 @@ function LaptopCategory() {
             });
     }
 
-    const handleDelCart = (item) => {
-
-        fetch(`https://localhost:7108/api/Cart/DeleteCart?Id=${item}`, {
+    const handleDelCart = (productId) => {
+        fetch(`https://localhost:7108/api/Cart/DeleteCart?Id=${productId}`, {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + getToken(),
@@ -135,10 +130,7 @@ function LaptopCategory() {
                 if (!response.ok) {
                     throw new Error('Failed to delete cart item');
                 }
-                return response.json();
-            })
-            .then(data => {
-                const updatedCartItems = cartItems.filter(cartItem => cartItem.id !== item.id);
+                const updatedCartItems = cartItems.filter(cartItem => cartItem.productId !== productId);
                 setCartItems(updatedCartItems);
             })
             .catch(error => console.error(error));
@@ -175,7 +167,7 @@ function LaptopCategory() {
                         {cartItems.length > 0 ? (
                             <div className="cart-items">
                                 {cartItems.map(item => (
-                                    <CartItem item={item} handleDelCart={handleDelCart} />
+                                    <CartItem item={item} key={item.productId} handleDelCart={handleDelCart} />
                                 ))}
                             </div>
                         ) : (
@@ -195,9 +187,9 @@ function LaptopCategory() {
 
                 <div className='filter'>
                     <h1>Filter</h1>
-                    <input id="minvalue" type="number" placeholder='Enter min price'></input>
-                    <input id="maxvalue" type="number" placeholder='Enter max price'></input>
-                    <button id="findGadget" onClick={handleClick}>Find</button>
+                    <input id="minvalue" type="number" value={minValue} onChange={(e) => { setMinValue(e.target.value) }} placeholder='Enter min price'></input>
+                    <input id="maxvalue" type="number" value={maxValue} onChange={(e) => { setMaxValue(e.target.value) }} placeholder='Enter max price'></input>
+                    <button id="findGadget" onClick={findGadgets}>Find</button>
                 </div>
 
                 <h1>Smart Watches</h1>
