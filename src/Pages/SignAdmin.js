@@ -56,7 +56,7 @@ function SignAdmin() {
             <div className="window-enter-adm">
                 <p id="enter">Привет сотрудник!</p>
                 <input id="login-enter" type="text" placeholder="Введите логин" value={userName} onChange={(e) => { setUserName(e.target.value) }} />
-                <input id="password-enter" type="text" placeholder="Введите пароль" value={password} onChange={(e) => { setPassword(e.target.value) }} />
+                <input id="password-enter" type="password" placeholder="Введите пароль" value={password} onChange={(e) => { setPassword(e.target.value) }} />
                 <button className="button-adm" onClick={() => { LogInAdm() }}>Enter</button>
             </div>
         </div>

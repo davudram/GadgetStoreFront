@@ -7,7 +7,10 @@ function CategoryGadgetTables(props) {
         return sessionStorage.getItem('token');
     }
 
+    const [showModal, setShowModal] = useState(false);
     const [updater, setUpdater] = useState(0);
+    const [idCategory, setIdCategory] = useState(null);
+    const [categoryName, setCategoryName] = useState('');
 
     useEffect(() => {
         axios({
@@ -42,6 +45,40 @@ function CategoryGadgetTables(props) {
         });
     }
 
+    const handleEdit = (categories) => {
+        setIdCategory(categories.id);
+        setCategoryName(categories.nameGadgets);
+        setShowModal(true);
+    };
+
+    const handleClickEdit = (e) => {
+        e.preventDefault();
+        if (!categoryName) {
+            alert('Please fill in all the fields.');
+            return;
+        }
+
+        axios({
+            method: 'POST',
+            url: 'https://localhost:7108/api/Categories/EditGadget',
+            data: {
+                "id": idCategory,
+                "nameGadgets": categoryName
+            },
+            headers: {
+                'Authorization': 'Bearer ' + getToken(),
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                alert("Successful");
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
 
     return (
         <div className="table-gadgets">
@@ -59,11 +96,25 @@ function CategoryGadgetTables(props) {
                         <tr key={index}>
                             <td>{categories.id}</td>
                             <td>{categories.nameGadgets}</td>
-                            <td><button className='del-btn-category' onClick={() => {handleClickDel(categories)}}>Delete</button></td>
+                            <td><button className='del-btn-category' onClick={() => {handleClickDel(categories)}}>Delete</button>
+                            <button className='edit-btn' onClick={() => handleEdit(categories)}>Edit</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+            {showModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <span className="close" onClick={() => setShowModal(false)}>&times;</span>
+                        <h2>Edit Category</h2>
+                        <form onSubmit={handleClickEdit}>
+                            <input id="edit-category-name" type="text" className="input" placeholder="Enter category name" value={categoryName} onChange={(e) => { setCategoryName(e.target.value) }} />
+                            <button type="submit">Save</button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

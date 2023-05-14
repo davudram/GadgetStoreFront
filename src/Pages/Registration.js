@@ -34,8 +34,8 @@ function Registration() {
       <div className="window-reg">
         <p id="reg">Окно регистрации</p>
         <input id="login-reg" type="text" placeholder="Введите логин" value={userName} onChange={(e) => { setUserName(e.target.value) }} />
-        <input id="password-reg" type="text" placeholder="Введите пароль" value={password} onChange={(e) => { setPassword(e.target.value) }} />
-        <input id="email-reg" type="text" placeholder="Введите почту" value={email} onChange={(e) => { setEmail(e.target.value) }} />
+        <input id="password-reg" type="password" placeholder="Введите пароль" value={password} onChange={(e) => { setPassword(e.target.value) }} />
+        <input id="email-reg" type="email" placeholder="Введите почту" value={email} onChange={(e) => { setEmail(e.target.value) }} />
         <button className="button-reg" onClick={() => { Reg() }}>Enter</button>
       </div>
     </div>
