@@ -111,25 +111,30 @@ function PhonesCategory() {
     }
 
     function findGadgets() {
-        fetch(`https://localhost:7108/api/Gadgets/FilterPriceByIdCategory?minPrice=${minValue}&maxPrice=${maxValue}&idcategory=1`, {
-            headers: {
-                'Authorization': 'Bearer ' + getToken(),
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(response.status);
+        if (minValue >= 0 && maxValue >= 0 && maxValue > minValue) {
+            fetch(`https://localhost:7108/api/Gadgets/FilterPriceByIdCategory?minPrice=${minValue}&maxPrice=${maxValue}&idcategory=1`, {
+                headers: {
+                    'Authorization': 'Bearer ' + getToken(),
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 }
-                return response.json();
             })
-            .then(data => {
-                setGadgetList(data);
-            })
-            .catch(error => {
-                console.error(error);
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    setGadgetList(data);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+        else {
+            alert("Please input correct value!");
+        }
     }
 
     const handleSortSelect = (e) => {
