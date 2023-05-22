@@ -11,6 +11,7 @@ import PhonesCategory from './Pages/PhonesCategory';
 import LaptopCategory from './Pages/LaptopCategory';
 import SmartWatchCategory from './Pages/SmartWatchCategory';
 import CardUpload from './Pages/CardUpload';
+import Reviews from './Pages/Reviews';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 
@@ -28,6 +29,7 @@ root.render(
         <Route path='/laptops' element={<LaptopCategory />}></Route>
         <Route path='/smartwatches' element={<SmartWatchCategory />}></Route>
         <Route path='/card' element={<CardUpload />}></Route>
+        <Route path='/reviews' element={<Reviews />}></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

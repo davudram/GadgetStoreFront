@@ -1,0 +1,165 @@
+.top-menu:after {
+    content: "";
+    display: block;
+    height: 1px;
+    border-top: 3px solid #575350;
+    border-bottom: 1px solid #575350;
+    margin-bottom: 2px;
+}
+
+.top-menu:after {
+    border-bottom: 3px solid #575350;
+    border-top: 1px solid #575350;
+    box-shadow: 0 2px 7px #ccc;
+    margin-top: 2px;
+}
+
+.menu-main {
+    list-style: none;
+    padding: 0 30px;
+    margin: 0;
+    font-size: 18px;
+    text-align: center;
+    position: relative;
+}
+
+.menu-main:before,
+.menu-main:after {
+    content: "\25C8";
+    line-height: 1;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.menu-main:before {
+    left: 15px;
+}
+
+.menu-main:after {
+    right: 15px;
+}
+
+.menu-main li {
+    display: inline-block;
+    padding: 5px 0;
+}
+
+.menu-main a {
+    text-decoration: none;
+    display: inline-block;
+    margin: 2px 5px;
+    padding: 6px 15px;
+    font-family: 'PT Sans', sans-serif;
+    font-size: 16px;
+    color: #777777;
+    border-bottom: 1px solid transparent;
+    transition: .3s linear;
+}
+
+.menu-main .current,
+.menu-main a:hover {
+    border-radius: 3px;
+    background: #f3ece1;
+    color: #313131;
+    text-shadow: 0 1px 0 #fff;
+    border-color: #c6c6c6;
+}
+
+@media (max-width: 500px) {
+    .menu-main li {
+        display: block;
+    }
+}
+
+.commentaries {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.commentaries h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.commentary-block {
+    height: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.commentary-block h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.commentary-block label {
+    font-weight: bold;
+}
+
+.commentary-block p {
+    margin: 5px 0;
+}
+
+.comments-card {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.comments-card p {
+    margin-bottom: 10px;
+}
+
+.comments-card .star {
+    color: #ccc;
+    cursor: pointer;
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+.comments-card .filled {
+    color: #fbc02d;
+}
+
+.comments-card label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.comments-card input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.comments-card button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.comments-card button:hover {
+    background-color: #45a049;
+}
+
+#del-btn {
+    height: 35px;
+    width: 95px;
+    cursor: pointer;
+    border-radius: 10px;
+    margin-top: 1%;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    background-color:#fff;
+}

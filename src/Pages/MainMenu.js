@@ -1,13 +1,12 @@
-import '../Styles/Menu.css';
 import axios from 'axios';
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
 import Footer from './Footer';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiPlus } from "react-icons/fi";
-import { toast } from 'react-toastify';
 import CartItem from './CartItem';
+import '../Styles/Menu.css';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 function MainMenu() {
 
@@ -177,6 +176,7 @@ function MainMenu() {
                         <li id="phones" onClick={() => navigate('/phones')}><a href="">Phones</a></li>
                         <li onClick={() => navigate('/laptops')}><a href="">Laptop</a></li>
                         <li onClick={() => navigate('/smartwatches')}><a href="">Smart Watch</a></li>
+                        <li onClick={() => navigate('/reviews')}><a href="">Reviews</a></li>
                         <li><button className="btn" onClick={handleOpenCart}><i className="fa fa-home"></i>&#128722;</button></li>
                     </ul>
                 </nav>

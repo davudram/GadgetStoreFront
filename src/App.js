@@ -36,7 +36,7 @@ function App() {
           <div className="window-elements">
             <p id="enter">Войти в аккаунт</p>
             <input id="login-enter" type="text" placeholder="Введите логин" value={userName} onChange={(e) => { setUserName(e.target.value) }} />
-            <input id="password-enter" type="password" placeholder="Введите пароль" value={password} onChange={(e) => { setPassword(e.target.value) }} />
+            <input id="password-enter" type="text" placeholder="Введите пароль" value={password} onChange={(e) => { setPassword(e.target.value) }} />
             <button className="button-log" onClick={() => { LogIn() }}>Enter</button>
           </div>
           <div className='help-nav'>
