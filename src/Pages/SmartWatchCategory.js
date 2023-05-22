@@ -200,7 +200,9 @@ function LaptopCategory() {
                 <h1>Smart Watches</h1>
                 <div className="cards-watches">
                     {gadgetList.length > 0 ? (
-                        gadgetList.map(gadget => (
+                        gadgetList.sort((a, b) => {
+                            return sortId === '2' ? b.price - a.price : a.price - b.price
+                        }).map(gadget => (
                             <div className='card' key={gadget.id}>
                                 <img src={`${gadget.image}`} className="regular-img" style={{ height: 130, width: 100 }}></img>
                                 <h2>{gadget.name}</h2>
