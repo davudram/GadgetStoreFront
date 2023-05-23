@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import {Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Footer from './Footer.js';
 import '../Styles/Reviews.css';
 
 function Reviews() {
-    const navigate = useNavigate();
+    const [showModal, setShowModal] = useState(false);
     const [userName, setUserName] = useState(null);
+    const [commId, setCommId] = useState();
     const [comment, setComment] = useState([]);
     const [commentTitle, setCommentTitle] = useState('');
     const [commentText, setCommentText] = useState('');
@@ -25,8 +26,8 @@ function Reviews() {
             method: 'GET',
             url: 'https://localhost:7108/api/Comments/GetComment',
             headers: {
-                'Authorization': 'Bearer ' + getToken(),
-                'Accept': 'application/json',
+                Authorization: 'Bearer ' + getToken(),
+                Accept: 'application/json',
                 'Content-Type': 'application/json'
             }
         })
@@ -70,8 +71,8 @@ function Reviews() {
                 "createdAt": new Date().toISOString()
             },
             headers: {
-                'Authorization': 'Bearer ' + getToken(),
-                'Accept': 'application/json',
+                Authorization: 'Bearer ' + getToken(),
+                Accept: 'application/json',
                 'Content-Type': 'application/json'
             }
         })
@@ -96,8 +97,43 @@ function Reviews() {
                 "createdAt": new Date().toISOString()
             },
             headers: {
-                'Authorization': 'Bearer ' + getToken(),
-                'Accept': 'application/json',
+                Authorization: 'Bearer ' + getToken(),
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                alert("Successful");
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Error!");
+            });
+    }
+
+    const handleEdit = (comments) => {
+        setCommId(comments.id);
+        setCommentTitle(comments.title);
+        setCommentText(comments.text);
+        setRating(comments.stars);
+        setShowModal(true);
+    }
+
+    const handleEditComm = () => {
+        axios({
+            method: 'POST',
+            url: 'https://localhost:7108/api/Comments/UpdateComment',
+            data: {
+                "id": commId,
+                "userName": userName,
+                "title": commentTitle,
+                "text": commentText,
+                "stars": rating,
+                "createdAt": new Date().toISOString()
+            },
+            headers: {
+                Authorization: 'Bearer ' + getToken(),
+                Accept: 'application/json',
                 'Content-Type': 'application/json'
             }
         })
@@ -120,7 +156,7 @@ function Reviews() {
         <div className="reviews">
             <nav className="top-menu">
                 <ul className="menu-main">
-                <li id="phones"><Link to="/phones">Phones</Link></li>
+                    <li id="phones"><Link to="/phones">Phones</Link></li>
                     <li><Link to="/laptops">Laptop</Link></li>
                     <li><Link to="/smartwatches">Smart Watch</Link></li>
                     <li><Link to="/menu">Menu</Link></li>
@@ -137,7 +173,8 @@ function Reviews() {
                             <p>Rating: {renderStars(comments.stars)}</p>
                             <p>Text: {comments.text}</p>
                             <p>Date: {comments.createAt}</p>
-                            <button id='del-btn' onClick={() => handleDelComm(comments)}>Delete</button>
+                            <button id="del-btn" className="btn btn-danger" onClick={() => { handleDelComm(comments) }}>Delete</button>
+                            <button id="edit-btn" className="btn btn-primary" onClick={() => { handleEdit(comments) }}>Edit</button>
                         </div>
                     ))
                 ) : (
@@ -147,15 +184,17 @@ function Reviews() {
 
             <div className="comments-card">
                 <p>Selected rating: {renderStars(rating)}</p>
-                {[1, 2, 3, 4, 5].map((value) => (
-                    <span
-                        key={value}
-                        className={value <= rating ? 'star filled' : 'star'}
-                        onClick={() => handleStarClick(value)}
-                    >
-                        &#9733;
-                    </span>
-                ))}
+                <div className="stars-container">
+                    {[1, 2, 3, 4, 5].map((value) => (
+                        <span
+                            key={value}
+                            className={value <= rating ? 'star filled' : 'star'}
+                            onClick={() => handleStarClick(value)}
+                        >
+                            &#9733;
+                        </span>
+                    ))}
+                </div>
                 <label htmlFor="comment-title">Input comment title</label>
                 <input
                     type="text"
@@ -174,6 +213,31 @@ function Reviews() {
                 />
                 <button id='send-btn' onClick={handleAddComm}>Send comment</button>
             </div>
+            {showModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <span className="close" onClick={() => setShowModal(false)}>&times;</span>
+                        <h2>Edit Comment</h2>
+                        <form onSubmit={handleEditComm}>
+                            <input id="edit-title" type="text" className="input" placeholder="Enter title" value={commentTitle} onChange={(e) => { setCommentTitle(e.target.value) }} />
+                            <input id="edit-text" type="text" className="input" placeholder="Enter text" value={commentText} onChange={(e) => { setCommentText(e.target.value) }} />
+                            <p>Selected rating: {renderStars(rating)}</p>
+                            <div className="edit-stars-container">
+                                {[1, 2, 3, 4, 5].map((value) => (
+                                    <span
+                                        key={value}
+                                        className={value <= rating ? 'star filled' : 'star'}
+                                        onClick={() => handleStarClick(value)}
+                                    >
+                                        &#9733;
+                                    </span>
+                                ))}
+                            </div>
+                            <button type="submit">Save</button>
+                        </form>
+                    </div>
+                </div>
+            )}
             <Footer />
         </div>
     );
