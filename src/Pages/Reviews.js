@@ -152,6 +152,10 @@ function Reviews() {
         return filledStars + emptyStars;
     };
 
+    const checkUserComm = (comment) => {
+        return comment.userName === userName
+    }
+
     return (
         <div className="reviews">
             <nav className="top-menu">
@@ -173,8 +177,12 @@ function Reviews() {
                             <p>Rating: {renderStars(comments.stars)}</p>
                             <p>Text: {comments.text}</p>
                             <p>Date: {comments.createAt}</p>
-                            <button id="del-btn" className="btn btn-danger" onClick={() => { handleDelComm(comments) }}>Delete</button>
-                            <button id="edit-btn" className="btn btn-primary" onClick={() => { handleEdit(comments) }}>Edit</button>
+                            {checkUserComm(comments) && (
+                                <>
+                                    <button id="del-btn" className="btn btn-danger" onClick={() => { handleDelComm(comments) }}>Delete</button>
+                                    <button id="edit-btn" className="btn btn-primary" onClick={() => { handleEdit(comments) }}>Edit</button>
+                                </>
+                            )}
                         </div>
                     ))
                 ) : (
