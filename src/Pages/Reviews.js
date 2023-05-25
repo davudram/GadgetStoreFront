@@ -104,6 +104,8 @@ function Reviews() {
         })
             .then(response => {
                 alert("Successful");
+                const updatedComments = comment.filter(c => c.id !== comments.id);
+                setComment(updatedComments);
             })
             .catch(error => {
                 console.error(error);
